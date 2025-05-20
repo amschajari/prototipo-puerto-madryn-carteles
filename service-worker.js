@@ -1,37 +1,38 @@
-const CACHE_NAME = 'madryn-reportes-cache-v3'; // O v_debug_1, o algo que sepas que es nuevo
+const CACHE_NAME = 'madryn-reportes-cache-v4'; // <-- NUEVA VERSIÓN
 const urlsToCache = [
-  './',                          // Cachea la raíz (generalmente sirve index.html)
-  './index.html',                // Cachea explícitamente index.html
-  './manifest.json',             // Cachea el manifiesto
-  // './style.css',              // Descomenta si tienes un archivo style.css local
-  // './script.js',              // Descomenta si tienes un archivo script.js local principal
-  './icons/icon-192.png',        // Icono PWA
-  './icons/icon-512.png',        // Icono PWA
-  './img/escudo_madryn.png',     // ¡IMPORTANTE! Cachear el escudo del header
+  // Locales (ya sabemos que funcionan)
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './img/escudo_madryn.png',
 
+  // AÑADIMOS EL PRIMER GRUPO EXTERNO: LEAFLET
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
 ];
 
-// Evento 'install': Se dispara cuando el Service Worker se instala por primera vez.
 self.addEventListener('install', event => {
-  console.log('[ServiceWorker] Instalando v3 (solo locales)...'); // Log actualizado
+  console.log('[ServiceWorker] Instalando v4 (locales + Leaflet)...'); // LOG ACTUALIZADO
   event.waitUntil(
-    caches.open(CACHE_NAME) // CACHE_NAME ahora será 'madryn-reportes-cache-v3'
+    caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[ServiceWorker] v3: Cacheando solo archivos locales básicos'); // Log actualizado
-        return cache.addAll(urlsToCache) // urlsToCache ahora es la lista simplificada
+        console.log('[ServiceWorker] v4: Cacheando locales y Leaflet'); // LOG ACTUALIZADO
+        return cache.addAll(urlsToCache)
           .then(() => {
-            console.log('[ServiceWorker] v3: Archivos locales básicos cacheados exitosamente.');
+            console.log('[ServiceWorker] v4: Archivos (locales y Leaflet) cacheados exitosamente.');
           })
-          .catch(error => {
-            console.error('[ServiceWorker] v3: Fallo en cache.addAll() para archivos locales:', error);
-            console.error('[ServiceWorker] v3: URLs que se intentaron cachear:', urlsToCache);
+          .catch(error => { 
+            console.error('[ServiceWorker] v4: Fallo en cache.addAll() para (locales y Leaflet):', error);
+            console.error('[ServiceWorker] v4: URLs que se intentaron cachear:', urlsToCache);
           });
       })
       .catch(error => {
-        console.error('[ServiceWorker] v3: Fallo al abrir el caché:', error);
+        console.error('[ServiceWorker] v4: Fallo al abrir el caché:', error);
       })
   );
-  self.skipWaiting(); // Fuerza al nuevo Service Worker a activarse inmediatamente después de la instalación.
+  self.skipWaiting();
 });
 
 // Evento 'activate': Se dispara después de que el SW se instala y cuando una nueva versión reemplaza a una antigua.
