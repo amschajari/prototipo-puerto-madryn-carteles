@@ -1,4 +1,4 @@
-const CACHE_NAME = 'madryn-reportes-cache-v1'; // Mantenemos tu nombre de caché
+const CACHE_NAME = 'madryn-reportes-cache-v3'; // O v_debug_1, o algo que sepas que es nuevo
 const urlsToCache = [
   './',                          // Cachea la raíz (generalmente sirve index.html)
   './index.html',                // Cachea explícitamente index.html
@@ -9,33 +9,26 @@ const urlsToCache = [
   './icons/icon-512.png',        // Icono PWA
   './img/escudo_madryn.png',     // ¡IMPORTANTE! Cachear el escudo del header
 
-  // CDNs y Librerías Externas
-  'https://cdn.tailwindcss.com',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',        // CORREGIDO
-  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css', // AÑADIDO
-  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',  // Necesario
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-
-  // Firebase SDKs (TODOS los que usas)
-  'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js',
-  'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js', // Necesario
-  'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js'  // ¡Añade este si vas a usar subida de imágenes! Si no, puedes omitirlo.
 ];
 
 // Evento 'install': Se dispara cuando el Service Worker se instala por primera vez.
 self.addEventListener('install', event => {
-  console.log('[ServiceWorker] Instalando...');
+  console.log('[ServiceWorker] Instalando v3 (solo locales)...'); // Log actualizado
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(CACHE_NAME) // CACHE_NAME ahora será 'madryn-reportes-cache-v3'
       .then(cache => {
-        console.log('[ServiceWorker] Cacheando app shell y assets estáticos');
-        return cache.addAll(urlsToCache);
+        console.log('[ServiceWorker] v3: Cacheando solo archivos locales básicos'); // Log actualizado
+        return cache.addAll(urlsToCache) // urlsToCache ahora es la lista simplificada
+          .then(() => {
+            console.log('[ServiceWorker] v3: Archivos locales básicos cacheados exitosamente.');
+          })
+          .catch(error => {
+            console.error('[ServiceWorker] v3: Fallo en cache.addAll() para archivos locales:', error);
+            console.error('[ServiceWorker] v3: URLs que se intentaron cachear:', urlsToCache);
+          });
       })
       .catch(error => {
-        console.error('[ServiceWorker] Fallo al cachear durante la instalación:', error);
-        // Considera cómo manejar este error. Si los assets críticos no se cachean, la app offline podría no funcionar.
+        console.error('[ServiceWorker] v3: Fallo al abrir el caché:', error);
       })
   );
   self.skipWaiting(); // Fuerza al nuevo Service Worker a activarse inmediatamente después de la instalación.
