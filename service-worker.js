@@ -1,4 +1,4 @@
-const CACHE_NAME = 'madryn-reportes-cache-v5'; // <-- NUEVA VERSIÓN
+const CACHE_NAME = 'madryn-reportes-cache-v6'; // <-- NUEVA VERSIÓN
 const urlsToCache = [
   // Locales (funcionan)
   './',
@@ -12,34 +12,40 @@ const urlsToCache = [
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
 
-  // AÑADIMOS EL SIGUIENTE GRUPO: LEAFLET.MARKERCLUSTER
+  // Leaflet.MarkerCluster (funcionan)
   'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',
   'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css',
-  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js'
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',
+
+  // AÑADIMOS EL SIGUIENTE GRUPO: FONT AWESOME Y FIREBASE SDKs
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+  'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js',
+  'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js',
+  'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js' // Asumiendo que lo usarás para imágenes
 ];
 
 self.addEventListener('install', event => {
-  console.log('[ServiceWorker] Instalando v5 (locales + Leaflet + MarkerCluster)...'); // LOG ACTUALIZADO
+  console.log('[ServiceWorker] Instalando v6 (locales + libs + Firebase)...'); // LOG ACTUALIZADO
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[ServiceWorker] v5: Cacheando locales, Leaflet y MarkerCluster'); // LOG ACTUALIZADO
+        console.log('[ServiceWorker] v6: Cacheando todo...'); // LOG ACTUALIZADO
         return cache.addAll(urlsToCache)
           .then(() => {
-            console.log('[ServiceWorker] v5: Archivos (locales, Leaflet, MarkerCluster) cacheados exitosamente.');
+            console.log('[ServiceWorker] v6: Todos los archivos definidos cacheados exitosamente.');
           })
           .catch(error => { 
-            console.error('[ServiceWorker] v5: Fallo en cache.addAll() para (locales, Leaflet, MarkerCluster):', error);
-            console.error('[ServiceWorker] v5: URLs que se intentaron cachear:', urlsToCache);
+            console.error('[ServiceWorker] v6: Fallo en cache.addAll():', error);
+            console.error('[ServiceWorker] v6: URLs que se intentaron cachear:', urlsToCache);
           });
       })
       .catch(error => {
-        console.error('[ServiceWorker] v5: Fallo al abrir el caché:', error);
+        console.error('[ServiceWorker] v6: Fallo al abrir el caché:', error);
       })
   );
   self.skipWaiting();
 });
-// ... resto del SW sin cambios ...
+// ... resto del SW sin cambios (activate, fetch) ...
 
 // Evento 'activate': Se dispara después de que el SW se instala y cuando una nueva versión reemplaza a una antigua.
 self.addEventListener('activate', event => {
