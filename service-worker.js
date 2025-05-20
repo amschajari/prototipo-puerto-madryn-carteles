@@ -13,7 +13,8 @@ const urlsToCache = [
   'https://cdn.tailwindcss.com',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.css', // Necesario
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',        // CORREGIDO
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css', // AÑADIDO
   'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js',  // Necesario
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
 
