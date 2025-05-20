@@ -1,6 +1,6 @@
-const CACHE_NAME = 'madryn-reportes-cache-v4'; // <-- NUEVA VERSIÓN
+const CACHE_NAME = 'madryn-reportes-cache-v5'; // <-- NUEVA VERSIÓN
 const urlsToCache = [
-  // Locales (ya sabemos que funcionan)
+  // Locales (funcionan)
   './',
   './index.html',
   './manifest.json',
@@ -8,32 +8,38 @@ const urlsToCache = [
   './icons/icon-512.png',
   './img/escudo_madryn.png',
 
-  // AÑADIMOS EL PRIMER GRUPO EXTERNO: LEAFLET
+  // Leaflet (funcionan)
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+
+  // AÑADIMOS EL SIGUIENTE GRUPO: LEAFLET.MARKERCLUSTER
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css',
+  'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js'
 ];
 
 self.addEventListener('install', event => {
-  console.log('[ServiceWorker] Instalando v4 (locales + Leaflet)...'); // LOG ACTUALIZADO
+  console.log('[ServiceWorker] Instalando v5 (locales + Leaflet + MarkerCluster)...'); // LOG ACTUALIZADO
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[ServiceWorker] v4: Cacheando locales y Leaflet'); // LOG ACTUALIZADO
+        console.log('[ServiceWorker] v5: Cacheando locales, Leaflet y MarkerCluster'); // LOG ACTUALIZADO
         return cache.addAll(urlsToCache)
           .then(() => {
-            console.log('[ServiceWorker] v4: Archivos (locales y Leaflet) cacheados exitosamente.');
+            console.log('[ServiceWorker] v5: Archivos (locales, Leaflet, MarkerCluster) cacheados exitosamente.');
           })
           .catch(error => { 
-            console.error('[ServiceWorker] v4: Fallo en cache.addAll() para (locales y Leaflet):', error);
-            console.error('[ServiceWorker] v4: URLs que se intentaron cachear:', urlsToCache);
+            console.error('[ServiceWorker] v5: Fallo en cache.addAll() para (locales, Leaflet, MarkerCluster):', error);
+            console.error('[ServiceWorker] v5: URLs que se intentaron cachear:', urlsToCache);
           });
       })
       .catch(error => {
-        console.error('[ServiceWorker] v4: Fallo al abrir el caché:', error);
+        console.error('[ServiceWorker] v5: Fallo al abrir el caché:', error);
       })
   );
   self.skipWaiting();
 });
+// ... resto del SW sin cambios ...
 
 // Evento 'activate': Se dispara después de que el SW se instala y cuando una nueva versión reemplaza a una antigua.
 self.addEventListener('activate', event => {
