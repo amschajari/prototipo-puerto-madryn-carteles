@@ -546,6 +546,7 @@
         let currentSortDirection = 'desc';
         let selectedLocation = null; // Para el mapa de reporte de usuario
         let currentReportIdForModal = null; // Para saber qué reporte está en el modal
+        let userMapInitialized = false; // Nueva variable global
         let managementMap;
         let userMap;
         let managementMapMarkers; // Será un L.markerClusterGroup
@@ -649,6 +650,54 @@
             managementTabEl.addEventListener('click', () => switchTab('management'));                   
             userTabEl.addEventListener('click', () => {
                 switchTab('user'); // Esto maneja la visibilidad de las pestañas y el invalidateSize del mapa
+
+                 // --- INICIALIZAR userMap Y SU CONTROL GPS SOLO LA PRIMERA VEZ QUE SE ABRE LA PESTAÑA ---
+                if (!userMapInitialized && userMap) { // userMap ya debería estar definido como variable
+                console.log("Inicializando controles de userMap por primera vez al hacer visible la pestaña.");
+                
+        // ***** PEGAR AQUÍ LA DEFINICIÓN COMPLETA DE GpsButtonControl *****
+            const GpsButtonControl = L.Control.extend({
+                options: {
+                    position: 'topright' 
+                },
+                onAdd: function (map) {
+                    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+                    container.style.backgroundColor = 'white';
+                    container.style.width = '34px';
+                    container.style.height = '34px';
+                    container.style.borderRadius = '4px';
+                    container.style.boxShadow = '0 1px 5px rgba(0,0,0,0.4)';
+                    container.style.display = 'flex';
+                    container.style.alignItems = 'center';
+                    container.style.justifyContent = 'center';
+                    container.style.cursor = 'pointer';
+                    container.innerHTML = '<i class="fas fa-location-crosshairs" style="font-size: 18px; color: #333;"></i>';
+                    container.title = 'Usar mi ubicación actual';
+
+                    L.DomEvent.disableClickPropagation(container);
+                    L.DomEvent.on(container, 'click', function (ev) {
+                        L.DomEvent.stopPropagation(ev);
+                        obtenerUbicacionGPSParaUserMap(); 
+                    });
+                    return container;
+                }
+            });
+            userMap.addControl(new GpsButtonControl());
+            // ***** FIN DE LA DEFINICIÓN DE GpsButtonControl *****
+
+            // Mover el userMap.on('click', ...) aquí también
+            userMap.on('click', function(e) {
+                if (!e.latlng) { 
+                    console.error("Error: e.latlng no está definido en el evento de clic del userMap."); 
+                    return; 
+                }
+                actualizarMarcadorYFormulario(e.latlng);
+            });
+
+                    userMapInitialized = true; // Marcar como inicializado DESPUÉS de añadir controles y listeners
+                    console.log("userMap ahora completamente inicializado con controles y listeners.");
+
+                } // <-- ESTA ES LA LLAVE QUE CIERRA el if (!userMapInitialized && userMap)
 
                 // Lógica adicional al hacer clic en la pestaña "Reporte de Incidentes"
                 if (userMap && selectedLocation) { // Opcional: Limpiar marcador previo si existía
@@ -1124,99 +1173,59 @@
             });
         }
 
-function initUserMap() {
-    console.log("Inicializando userMap con botón de GPS..."); // Log actualizado
-    const puertoMadrynCoords = [-42.7692, -65.0392];
-    userMap = L.map('userMap', {
-        // Si tenías otras opciones específicas para userMap, como zoomControl: false, ponlas aquí
-    }).setView(puertoMadrynCoords, 13);
+        function initUserMap() {
+            console.log("Inicializando userMap (solo base)..."); // Log indicando que es la inicialización base
+            const puertoMadrynCoords = [-42.7692, -65.0392];
+            
+            if (!userMap) { 
+                userMap = L.map('userMap', {
+                    // Si tenías opciones como zoomControl: false, etc., irían aquí, dentro de L.map('userMap', { AQUÍ })
+                }).setView(puertoMadrynCoords, 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(userMap);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(userMap);
+                console.log("userMap base creado.");
+            } else {
+                console.log("userMap ya existía, solo se asegura la vista y el zoom.");
+                userMap.setView(puertoMadrynCoords, 13); // Asegurar el centro y zoom
+            }
+            // AQUÍ TERMINA LA FUNCIÓN. NADA MÁS DEBE IR DESPUÉS DE ESTE COMENTARIO DENTRO DE ESTA FUNCIÓN.
+        } // <--- ESTA ES LA LLAVE DE CIERRE DE initUserMap()
 
-    // ----- INICIO: BOTÓN DE GEOLOCALIZACIÓN PERSONALIZADO -----
-    const GpsButtonControl = L.Control.extend({
-        options: {
-            position: 'topright' 
-        },
-        onAdd: function (map) {
-            const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            container.style.backgroundColor = 'white';
-            container.style.width = '34px'; // Un poco más de ancho para el padding
-            container.style.height = '34px';// Un poco más de alto para el padding
-            container.style.borderRadius = '4px';
-            container.style.boxShadow = '0 1px 5px rgba(0,0,0,0.4)';
-            container.style.textAlign = 'center';
-            container.style.cursor = 'pointer'; // Hacer que parezca clickeable
-            // Para centrar el ícono mejor:
-            container.style.display = 'flex';
-            container.style.alignItems = 'center';
-            container.style.justifyContent = 'center';
+        // ***** INICIO DEL BLOQUE B - NUEVAS FUNCIONES *****
+        function actualizarMarcadorYFormulario(latLng) {
+            // Asegurarse que las variables globales de los elementos del DOM estén disponibles
+            // Si no las tienes cacheadas globalmente, obténlas aquí:
+            // const reportFormContainerEl = document.getElementById('reportFormContainer');
+            // const successMessageDivEl = document.getElementById('successMessage');
 
-            container.innerHTML = '<i class="fas fa-location-crosshairs" style="font-size: 18px; color: #333;"></i>'; // Ícono y color
-            container.title = 'Usar mi ubicación actual';
+            if (!userMap || !latLng || typeof latLng.lat === 'undefined' || typeof latLng.lng === 'undefined') {
+                console.error("actualizarMarcadorYFormulario: userMap o latLng no válidos.", userMap, latLng);
+                return;
+            }
 
-            L.DomEvent.disableClickPropagation(container);
+            if (selectedLocation) {
+                userMap.removeLayer(selectedLocation);
+            }
+            try {
+                selectedLocation = L.marker(latLng).addTo(userMap);
+                console.log("Marcador (re)colocado en:", latLng.lat, latLng.lng);
+            } catch (error) {
+                console.error("Error al crear L.marker en actualizarMarcadorYFormulario:", error, "latLng era:", latLng);
+                alert("Error al colocar el marcador en el mapa.");
+                return;
+            }
 
-            L.DomEvent.on(container, 'click', function (ev) {
-                L.DomEvent.stopPropagation(ev); // Detener propagación también aquí por si acaso
-                console.log('Botón de Geolocalización clickeado');
-                obtenerUbicacionGPSParaUserMap(); 
-            });
-            return container;
+
+            // Mostrar el formulario (asegúrate que reportFormContainerEl y successMessageDivEl estén definidos globalmente o pásalos como parámetros)
+            if (reportFormContainerEl) reportFormContainerEl.classList.remove('hidden');
+            if (successMessageDivEl) successMessageDivEl.classList.add('hidden');
+
+            if (window.innerWidth < 768 && reportFormContainerEl) {
+                reportFormContainerEl.scrollIntoView({ behavior: 'smooth' });
+            }
         }
-    });
-    userMap.addControl(new GpsButtonControl());
-    // ----- FIN: BOTÓN DE GEOLOCALIZACIÓN PERSONALIZADO -----
-
-    // Listener para cuando el usuario hace clic EN EL MAPA (para colocar marcador manualmente)
-    userMap.on('click', function(e) {
-        // El e.latlng viene del evento de clic del mapa
-        if (!e.latlng) {
-            console.error("Error: e.latlng no está definido en el evento de clic del userMap.");
-            return;
-        }
-        console.log("Clic manual en userMap en:", e.latlng);
-        actualizarMarcadorYFormulario(e.latlng); // Usamos la nueva función
-    });
-
-    console.log("userMap inicializado con botón de GPS y listener de clic en mapa.");
-}
-
-// ***** INICIO DEL BLOQUE B - NUEVAS FUNCIONES *****
-function actualizarMarcadorYFormulario(latLng) {
-    // Asegurarse que las variables globales de los elementos del DOM estén disponibles
-    // Si no las tienes cacheadas globalmente, obténlas aquí:
-    // const reportFormContainerEl = document.getElementById('reportFormContainer');
-    // const successMessageDivEl = document.getElementById('successMessage');
-
-    if (!userMap || !latLng || typeof latLng.lat === 'undefined' || typeof latLng.lng === 'undefined') {
-        console.error("actualizarMarcadorYFormulario: userMap o latLng no válidos.", userMap, latLng);
-        return;
-    }
-
-    if (selectedLocation) {
-        userMap.removeLayer(selectedLocation);
-    }
-    try {
-        selectedLocation = L.marker(latLng).addTo(userMap);
-        console.log("Marcador (re)colocado en:", latLng.lat, latLng.lng);
-    } catch (error) {
-        console.error("Error al crear L.marker en actualizarMarcadorYFormulario:", error, "latLng era:", latLng);
-        alert("Error al colocar el marcador en el mapa.");
-        return;
-    }
-
-
-    // Mostrar el formulario (asegúrate que reportFormContainerEl y successMessageDivEl estén definidos globalmente o pásalos como parámetros)
-    if (reportFormContainerEl) reportFormContainerEl.classList.remove('hidden');
-    if (successMessageDivEl) successMessageDivEl.classList.add('hidden');
-
-    if (window.innerWidth < 768 && reportFormContainerEl) {
-        reportFormContainerEl.scrollIntoView({ behavior: 'smooth' });
-    }
-}
 
 function obtenerUbicacionGPSParaUserMap() {
     if (navigator.geolocation) {
