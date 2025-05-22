@@ -1,4 +1,4 @@
-const CACHE_NAME = 'madryn-reportes-cache-v7'; // <-- CAMBIADO A v7
+const CACHE_NAME = 'madryn-reportes-cache-v8'; // <-- CAMBIADO A v8
 const urlsToCache = [
   // Locales (funcionan)
   './',
@@ -25,22 +25,22 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
-  console.log('[ServiceWorker] Instalando v7 (locales + libs + Firebase)...'); // LOG ACTUALIZADO
+  console.log('[ServiceWorker] Instalando v8 (locales + libs + Firebase)...'); // LOG ACTUALIZADO
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[ServiceWorker] v7: Cacheando todo...'); // LOG ACTUALIZADO
+        console.log('[ServiceWorker] v8: Cacheando todo...'); // LOG ACTUALIZADO
         return cache.addAll(urlsToCache)
           .then(() => {
-            console.log('[ServiceWorker] v7: Todos los archivos definidos cacheados exitosamente.');
+            console.log('[ServiceWorker] v8: Todos los archivos definidos cacheados exitosamente.');
           })
           .catch(error => { 
-            console.error('[ServiceWorker] v7: Fallo en cache.addAll():', error);
-            console.error('[ServiceWorker] v7: URLs que se intentaron cachear:', urlsToCache);
+            console.error('[ServiceWorker] v8: Fallo en cache.addAll():', error);
+            console.error('[ServiceWorker] v8: URLs que se intentaron cachear:', urlsToCache);
           });
       })
       .catch(error => {
-        console.error('[ServiceWorker] v7: Fallo al abrir el caché:', error);
+        console.error('[ServiceWorker] v8: Fallo al abrir el caché:', error);
       })
   );
   self.skipWaiting();

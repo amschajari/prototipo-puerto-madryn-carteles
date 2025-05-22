@@ -1322,8 +1322,72 @@
                     marker.reportData = report; // Adjuntar datos para el popup y clics
                     marker.bindPopup(`<b>${report.titulo || report.categoria}</b><br>Estado: ${report.estado}`);
                     marker.on('click', (e) => {
-                        openReportModal(e.target.reportData.id); // Abrir modal al hacer clic
-                        highlightTableRow(e.target.reportData.id);
+                        const clickedReport = e.target.reportData; // Obtenemos el reporte asociado al marcador
+                        
+                        console.log(`Marcador clickeado. Reporte ID: ${clickedReport.id}`);
+                        openReportModal(clickedReport.id); // Abrir el modal siempre
+
+                        // Intentar resaltar la fila y cambiar de página si es necesario
+                        let targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
+
+                        // Primero, quitar resaltado de cualquier otra fila
+                        document.querySelectorAll('#reportsTableBody tr').forEach(tr => {
+                            tr.classList.remove('bg-blue-200'); // O la clase de resaltado que uses
+                        });
+
+                        if (targetRow) {
+                            // El reporte está en la página actual de la tabla
+                            console.log(`Fila para ${clickedReport.id} encontrada en la página actual.`);
+                            targetRow.classList.add('bg-blue-200');
+                            targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        } else {
+                            // El reporte NO está en la página actual, buscar en 'currentDisplayedReports'
+                            console.log(`Fila para ${clickedReport.id} NO encontrada en pág. actual. Buscando en todos los reportes filtrados...`);
+                            const reportIndexInDisplayed = currentDisplayedReports.findIndex(r => r.id === clickedReport.id);
+
+                            if (reportIndexInDisplayed !== -1) {
+                                // Calcular la página a la que pertenece
+                                const targetPage = Math.ceil((reportIndexInDisplayed + 1) / currentRowsPerPage);
+                                console.log(`Reporte ${clickedReport.id} está en el índice ${reportIndexInDisplayed} de currentDisplayedReports, pertenece a la pág. ${targetPage}. Página actual: ${currentPage}, Total Págs: ${totalPages}`);
+
+                                if (targetPage !== currentPage && targetPage > 0 && targetPage <= totalPages) {
+                                    console.log(`Cambiando a pág. ${targetPage} para mostrar reporte ${clickedReport.id}`);
+                                    currentPage = targetPage;
+                                    renderTable(); // Esto re-renderiza la tabla con la nueva página
+
+                                    // Después de re-renderizar, la fila debería existir. Intentar resaltar y hacer scroll.
+                                    setTimeout(() => {
+                                        targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
+                                        if (targetRow) {
+                                            console.log(`Fila para ${clickedReport.id} encontrada después de cambiar a pág. ${targetPage}.`);
+                                            targetRow.classList.add('bg-blue-200');
+                                            targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                        } else {
+                                            console.warn(`Fila para ${clickedReport.id} aún no encontrada después de cambiar a pág. ${targetPage}. Esto podría ser un error si el reporte existe.`);
+                                        }
+                                    }, 150); // Pequeño delay para que el DOM se actualice
+                                } else if (targetPage === currentPage) {
+                                    // Esto es un caso raro: el cálculo dice que está en la página actual,
+                                    // pero no se encontró la fila inicialmente. Puede pasar si renderTable no se completó.
+                                    // Forzar un re-render y re-intentar puede ayudar.
+                                    console.warn(`Reporte ${clickedReport.id} debería estar en pág. actual ${currentPage} pero la fila no se encontró. Re-renderizando tabla.`);
+                                    renderTable();
+                                    setTimeout(() => {
+                                        targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
+                                        if (targetRow) {
+                                            targetRow.classList.add('bg-blue-200');
+                                            targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                        }
+                                    }, 150);
+                                } else {
+                                     console.log(`Página destino ${targetPage} es la actual o inválida. No se cambia de página para ${clickedReport.id}.`);
+                                     // Si targetPage === currentPage y no se encontró, ya se intentó arriba.
+                                     // Si es inválida, no hacer nada.
+                                }
+                            } else {
+                                console.error(`Reporte ${clickedReport.id} (del marcador) NO encontrado en currentDisplayedReports. No se puede cambiar de página ni resaltar.`);
+                            }
+                        }
                     });
                     managementMapMarkers.addLayer(marker);
                 }
