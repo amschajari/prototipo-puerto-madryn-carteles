@@ -283,6 +283,19 @@
     }
     /* === FIN: ESTILOS DARK MODE ADICIONALES Y CORRECCIONES === */
 
+    /* Evitar truncado en la cabecera del modal */
+    #reportModal .modal-header {
+        min-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Ajustar ancho del modal (opcional) */
+    #reportModal {
+        width: 80%;
+    }
+
 </style>
 </head>
 <body class="bg-gray-100">
@@ -485,7 +498,7 @@
                 <div class="flex flex-col lg:flex-row gap-6">
                     <div class="lg:w-2/3">
                         <h2 class="text-xl font-semibold mb-4">Reportar un incidente</h2>
-                        <p class="mb-4 text-gray-600">Seleccione la ubicación exacta del incidente en el mapa haciendo clic en el lugar correspondiente.</p>
+                        <p class="mb-4 text-gray-300">Seleccione la ubicación exacta del incidente en el mapa haciendo clic en el lugar correspondiente.</p>
                         <div id="userMap" class="crosshair-cursor"></div> <!-- Altura definida en CSS global -->
                     </div>
 
@@ -522,16 +535,17 @@
                                     <!-- Nota: 'calle2' no tiene 'required', es opcional -->
                                 </div>
                                 <!-- ***** FIN: NUEVOS CAMPOS CALLE 1 Y CALLE 2 ***** -->
-                                    <!-- CAMBIO: ID y 'for' actualizados para el formulario de categoría -->
-                                    <label for="categoriaFormulario" class="block text-gray-700 mb-1">Categoría</label>
-                                    <select id="categoriaFormulario" name="categoriaReporteFormulario" class="w-full p-2 border rounded" required>
-                                        <option value="" disabled selected>Seleccione una categoría...</option>
-                                        <option value="A realizar">A realizar</option>
-                                        <option value="Nuevo">Nuevo</option>
-                                        <option value="Dañado">Dañado</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </div>
+                                    <!-- CAMPO CATEGORÍA - ASEGÚRATE QUE ESTÉ ASÍ -->
+                            <div class="mb-3"> <!-- Este div envuelve label y select de categoría -->
+                                <label for="categoriaFormulario" class="block text-gray-700 mb-1">Categoría</label>
+                                <select id="categoriaFormulario" name="categoriaReporteFormulario" class="w-full p-2 border rounded" required>
+                                    <option value="" disabled selected>Seleccione una categoría...</option>
+                                    <option value="A realizar">A realizar</option>
+                                    <option value="Nuevo">Nuevo</option>
+                                    <option value="Dañado">Dañado</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div> <!-- ESTE es el cierre correcto del div de Categoría -->
                                 <div class="mb-3">
                                     <label for="reportDescription" class="block text-gray-700 mb-1">Descripción</label> <!-- CAMBIO: 'for' añadido -->
                                     <textarea id="reportDescription" class="w-full p-2 border rounded" rows="3" placeholder="Describa el problema con detalle..." required></textarea>
@@ -580,42 +594,55 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="py-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- DENTRO DE <div id="reportModal" ...> <div class="relative top-20 ..."> -->
+            <!-- ... (el div del encabezado con id="modalTitle" y el botón de cierre se quedan igual) ... -->
+
+            <div class="py-4"> <!-- Este div ya lo tienes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"> <!-- Añadido mb-4 para separar de la descripción -->
                     <div>
-                        <!-- CAMBIO: Texto y ID para mostrar categoría -->
+                        <h4 class="font-medium text-gray-700">Calle Principal:</h4>
+                        <p id="modalCalle1" class="mt-1 text-sm"></p> <!-- text-sm para que no ocupe tanto -->
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-700">Calle Secundaria/Intersección:</h4>
+                        <p id="modalCalle2" class="mt-1 text-sm"></p>
+                    </div>
+                    <div>
                         <h4 class="font-medium text-gray-700">Categoría del Problema:</h4>
-                        <p id="modalCategoria" class="mt-1"></p>
+                        <p id="modalCategoria" class="mt-1 text-sm"></p>
                     </div>
                     <div>
                         <h4 class="font-medium text-gray-700">Estado:</h4>
-                        <p id="modalStatus" class="mt-1"></p>
+                        <p id="modalStatus" class="mt-1 text-sm"></p>
                     </div>
                     <div>
-                        <h4 class="font-medium text-gray-700">Fecha Creación:</h4> <!-- CAMBIO: Más específico -->
-                        <p id="modalDate" class="mt-1"></p>
+                        <h4 class="font-medium text-gray-700">Fecha Creación:</h4>
+                        <p id="modalDate" class="mt-1 text-sm"></p>
                     </div>
                     <div>
                         <h4 class="font-medium text-gray-700">Últ. Modificación:</h4>
-                        <p id="modalDateModified" class="mt-1"></p>
+                        <p id="modalDateModified" class="mt-1 text-sm"></p>
                     </div>
-                    <div>
-                        <h4 class="font-medium text-gray-700">Ubicación (Lat, Lng):</h4> <!-- CAMBIO: Más específico -->
-                        <p id="modalLocation" class="mt-1"></p>
+                    <div class="md:col-span-2"> <!-- Hacer que Ubicación (Lat, Lng) ocupe todo el ancho si es necesario -->
+                        <h4 class="font-medium text-gray-700">Ubicación (Lat, Lng):</h4>
+                        <p id="modalLocation" class="mt-1 text-sm"></p>
                     </div>
-                    <!-- NOTA: El campo "Título" del reporte se mostrará en el encabezado del modal -->
                 </div>
-                <div class="mt-4">
+
+                <div class="mt-4"> <!-- Este div ya lo tienes -->
                     <h4 class="font-medium text-gray-700">Descripción:</h4>
-                    <p id="modalDescription" class="mt-1"></p>
+                    <p id="modalDescription" class="mt-1 text-sm"></p> <!-- text-sm añadido -->
                 </div>
-                <div class="mt-4">
+
+                <div class="mt-4"> <!-- Este div ya lo tienes -->
                     <h4 class="font-medium text-gray-700">Imagen:</h4>
                     <div id="modalImageContainer" class="mt-2">
-                        <img id="modalImage" src="" alt="Imagen del reporte" class="max-w-full max-h-64 rounded object-contain"> <!-- CAMBIO: object-contain añadido -->
+                        <img id="modalImage" src="" alt="Imagen del reporte" class="max-w-full max-h-64 rounded object-contain">
                     </div>
                 </div>
-            </div>
+            </div> <!-- Cierre de <div class="py-4"> -->
+
+            <!-- ... (el div de los botones "En proceso", "Resolver" se queda igual) ... -->
             <div class="flex justify-end pt-2 border-t">
                 <button id="markInProgressBtn" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2">
                     <i class="fas fa-spinner mr-1"></i> En proceso
@@ -661,24 +688,25 @@
       console.log("Firebase SDK cargado y configurado via module script.");
     </script>
 
-        <script>
+            <script>
         // ----- VARIABLES GLOBALES -----
         let allReports = [];
-        let currentDisplayedReports = []; // Para saber qué se está mostrando actualmente (filtrado y paginado)
+        let currentDisplayedReports = [];
         let currentPage = 1;
-        const rowsPerPageOptions = [5, 10, 20, 50]; // Opciones para el selector
-        let currentRowsPerPage = 10; // Valor inicial
+        const rowsPerPageOptions = [5, 10, 20, 50];
+        let currentRowsPerPage = 10;
         let totalPages = 1;
-        let currentSortColumn = 'fechaCreacion'; // CAMBIO: Ordenar por fechaCreacion por defecto
+        let currentSortColumn = 'fechaCreacion';
         let currentSortDirection = 'desc';
-        let selectedLocation = null; // Para el mapa de reporte de usuario
-        let currentReportIdForModal = null; // Para saber qué reporte está en el modal
-        let userMapInitialized = false; // Nueva variable global
+        let selectedLocation = null; // Para el marcador del NUEVO reporte en userMap
+        let currentReportIdForModal = null;
+        let userMapInitialized = false; // Para la inicialización diferida de controles en userMap
+        
         let managementMap;
         let userMap;
-        let managementMapMarkers; // Será un L.markerClusterGroup
+        let managementMapMarkers;         // Para L.markerClusterGroup en managementMap
+        let userMapExistingReportMarkers; // Para L.layerGroup de reportes existentes en userMap
 
-        // ----- COLORES PARA CATEGORÍAS (Igual que en la leyenda) -----
         const CATEGORY_COLORS = {
             'A realizar': '#FFA500', // Naranja
             'Nuevo':    '#28A745', // Verde
@@ -697,7 +725,7 @@
         // Formulario de Reporte
         const reportFormContainerEl = document.getElementById('reportFormContainer');
         const incidentFormEl = document.getElementById('incidentForm');
-        const reportTitleInputEl = document.getElementById('reportTitle');
+        // const reportTitleInputEl = document.getElementById('reportTitle'); // Ya no se usa
         const categoriaFormularioSelectEl = document.getElementById('categoriaFormulario');
         const reportDescriptionTextareaEl = document.getElementById('reportDescription');
         const openCameraBtnEl = document.getElementById('openCameraBtn');
@@ -705,7 +733,7 @@
         const cameraPreviewDivEl = document.getElementById('cameraPreview');
         const previewImageEl = document.getElementById('previewImage');
         const cancelReportBtnEl = document.getElementById('cancelReportBtn');
-        const submitReportBtnEl = document.getElementById('submitReportBtn'); // Asumiendo que el botón de submit tiene este ID
+        const submitReportBtnEl = document.getElementById('submitReportBtn');
         const successMessageDivEl = document.getElementById('successMessage');
         const reportNumberSpanEl = document.getElementById('reportNumber');
         const newReportBtnEl = document.getElementById('newReportBtn');
@@ -731,8 +759,8 @@
 
         // Modal
         const reportModalEl = document.getElementById('reportModal');
-        const modalTitleEl = document.getElementById('modalTitle'); // El H3
-        const modalReportIdSpanEl = document.getElementById('modalReportId'); // El span dentro del H3
+        const modalTitleEl = document.getElementById('modalTitle');
+        const modalReportIdSpanEl = document.getElementById('modalReportId'); // Si decides usarlo
         const modalCategoriaPEl = document.getElementById('modalCategoria');
         const modalStatusPEl = document.getElementById('modalStatus');
         const modalDatePEl = document.getElementById('modalDate');
@@ -741,6 +769,8 @@
         const modalDescriptionPEl = document.getElementById('modalDescription');
         const modalImageContainerEl = document.getElementById('modalImageContainer');
         const modalImageEl = document.getElementById('modalImage');
+        const modalCalle1PEl = document.getElementById('modalCalle1'); // Para el modal
+        const modalCalle2PEl = document.getElementById('modalCalle2'); // Para el modal
         const closeModalBtnEl = document.getElementById('closeModal');
         const markInProgressBtnEl = document.getElementById('markInProgressBtn');
         const markSolvedBtnEl = document.getElementById('markSolvedBtn');
@@ -749,138 +779,119 @@
         const todayReportsSpanEl = document.getElementById('todayReports');
         const monthReportsSpanEl = document.getElementById('monthReports');
         const solvedPercentageSpanEl = document.getElementById('solvedPercentage');
-        const urgentReportsSpanEl = document.getElementById('urgentReports');
+        const urgentReportsSpanEl = document.getElementById('urgentReports'); // Para "Dañados Pendientes"
 
         // Tema oscuro
         const themeToggleBtn = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
 
+
         // ----- INICIALIZACIÓN AL CARGAR EL DOM -----
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM completamente cargado y parseado.");
+            console.log("DOM cargado. Configurando listeners e inicializando mapas...");
             setupEventListeners();
             initManagementMap();
-            initUserMap();
-            listenToReports(); // CAMBIO: Nombre de la función de escucha
-            // No llamamos a applyFilters aquí, se llamará desde listenToReports la primera vez
-            
-            // Verificar tema almacenado en localStorage
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                document.body.classList.add('dark-mode');
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-            }
+            initUserMap();      // Inicializa userMap base y su layerGroup para marcadores existentes
+            listenToReports();  // Empieza a escuchar datos de Firebase
+            applyInitialTheme(); // Aplica el tema oscuro/claro inicial
         });
 
         // ----- CONFIGURACIÓN DE EVENT LISTENERS -----
         function setupEventListeners() {
+            console.log("Configurando Event Listeners...");
             // Pestañas
-            managementTabEl.addEventListener('click', () => switchTab('management'));                   
-            userTabEl.addEventListener('click', () => {
-                switchTab('user'); // Esto maneja la visibilidad de las pestañas y el invalidateSize del mapa
+            if (managementTabEl) managementTabEl.addEventListener('click', () => switchTab('management'));
+            if (userTabEl) {
+                userTabEl.addEventListener('click', () => {
+                    switchTab('user');
+                    
+                    if (!userMapInitialized && userMap) {
+                        console.log("userTab click: Inicializando controles de userMap (GPS, clic mapa).");
+                        const GpsButtonControl = L.Control.extend({
+                            options: { position: 'topright' },
+                            onAdd: function (map) {
+                                const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+                                container.style.backgroundColor = 'white'; container.style.width = '34px'; container.style.height = '34px';
+                                container.style.borderRadius = '4px'; container.style.boxShadow = '0 1px 5px rgba(0,0,0,0.4)';
+                                container.style.display = 'flex'; container.style.alignItems = 'center'; container.style.justifyContent = 'center';
+                                container.style.cursor = 'pointer';
+                                container.innerHTML = '<i class="fas fa-location-crosshairs" style="font-size: 18px; color: #333;"></i>';
+                                container.title = 'Usar mi ubicación actual';
+                                L.DomEvent.disableClickPropagation(container);
+                                L.DomEvent.on(container, 'click', function (ev) {
+                                    L.DomEvent.stopPropagation(ev);
+                                    obtenerUbicacionGPSParaUserMap(); 
+                                });
+                                return container;
+                            }
+                        });
+                        userMap.addControl(new GpsButtonControl());
 
-                 // --- INICIALIZAR userMap Y SU CONTROL GPS SOLO LA PRIMERA VEZ QUE SE ABRE LA PESTAÑA ---
-                if (!userMapInitialized && userMap) { // userMap ya debería estar definido como variable
-                console.log("Inicializando controles de userMap por primera vez al hacer visible la pestaña.");
-                
-        // ***** PEGAR AQUÍ LA DEFINICIÓN COMPLETA DE GpsButtonControl *****
-            const GpsButtonControl = L.Control.extend({
-                options: {
-                    position: 'topright' 
-                },
-                onAdd: function (map) {
-                    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-                    container.style.backgroundColor = 'white';
-                    container.style.width = '34px';
-                    container.style.height = '34px';
-                    container.style.borderRadius = '4px';
-                    container.style.boxShadow = '0 1px 5px rgba(0,0,0,0.4)';
-                    container.style.display = 'flex';
-                    container.style.alignItems = 'center';
-                    container.style.justifyContent = 'center';
-                    container.style.cursor = 'pointer';
-                    container.innerHTML = '<i class="fas fa-location-crosshairs" style="font-size: 18px; color: #333;"></i>';
-                    container.title = 'Usar mi ubicación actual';
+                        userMap.on('click', function(e) {
+                            if (!e.latlng) { console.error("Error: e.latlng no está definido en el evento de clic del userMap."); return; }
+                            actualizarMarcadorYFormulario(e.latlng);
+                        });
+                        userMapInitialized = true;
+                        console.log("userMap ahora completamente inicializado con controles y listeners interactivos.");
+                    }
 
-                    L.DomEvent.disableClickPropagation(container);
-                    L.DomEvent.on(container, 'click', function (ev) {
-                        L.DomEvent.stopPropagation(ev);
-                        obtenerUbicacionGPSParaUserMap(); 
-                    });
-                    return container;
-                }
-            });
-            userMap.addControl(new GpsButtonControl());
-            // ***** FIN DE LA DEFINICIÓN DE GpsButtonControl *****
+                    if (userMap && selectedLocation) {
+                        userMap.removeLayer(selectedLocation);
+                        selectedLocation = null;
+                    }
+                    if (reportFormContainerEl) reportFormContainerEl.classList.add('hidden'); 
+                    if (successMessageDivEl) successMessageDivEl.classList.add('hidden');
 
-            // Mover el userMap.on('click', ...) aquí también
-            userMap.on('click', function(e) {
-                if (!e.latlng) { 
-                    console.error("Error: e.latlng no está definido en el evento de clic del userMap."); 
-                    return; 
-                }
-                actualizarMarcadorYFormulario(e.latlng);
-            });
-
-                    userMapInitialized = true; // Marcar como inicializado DESPUÉS de añadir controles y listeners
-                    console.log("userMap ahora completamente inicializado con controles y listeners.");
-
-                } // <-- ESTA ES LA LLAVE QUE CIERRA el if (!userMapInitialized && userMap)
-
-                // Lógica adicional al hacer clic en la pestaña "Reporte de Incidentes"
-                if (userMap && selectedLocation) { // Opcional: Limpiar marcador previo si existía
-                    userMap.removeLayer(selectedLocation);
-                    selectedLocation = null;
-                    console.log("Marcador previo limpiado al entrar a la pestaña de reporte.");
-                }
-                
-                // Opcional: Asegurarse que el formulario esté oculto inicialmente
-                // hasta que se obtenga una ubicación (ya sea por el botón GPS o por clic manual en el mapa)
-                if (reportFormContainerEl) { // Asegúrate que reportFormContainerEl esté definido globalmente
-                    reportFormContainerEl.classList.add('hidden');
-                }
-                if (successMessageDivEl) { // Asegúrate que successMessageDivEl esté definido globalmente
-                    successMessageDivEl.classList.add('hidden');
-                }
-            });
+                    if (userMapInitialized && allReports.length > 0 && userMapExistingReportMarkers) { 
+                        renderUserMapExistingReports(allReports);
+                    } else if (userMapInitialized && userMapExistingReportMarkers) { 
+                        userMapExistingReportMarkers.clearLayers();
+                    }
+                });
+            }
 
             // Filtros
-            applyFiltersBtnEl.addEventListener('click', applyFilters);
-            resetFiltersBtnEl.addEventListener('click', resetFilters);
+            if (applyFiltersBtnEl) applyFiltersBtnEl.addEventListener('click', applyFilters);
+            if (resetFiltersBtnEl) resetFiltersBtnEl.addEventListener('click', resetFilters);
 
             // Formulario de Reporte
-            incidentFormEl.addEventListener('submit', handleReportSubmit);
-            cancelReportBtnEl.addEventListener('click', cancelReport);
-            newReportBtnEl.addEventListener('click', prepareNewReport);
-            openCameraBtnEl.addEventListener('click', () => fileInputEl.click());
-            fileInputEl.addEventListener('change', handleFileSelect);
+            if (incidentFormEl) incidentFormEl.addEventListener('submit', handleReportSubmit);
+            if (cancelReportBtnEl) cancelReportBtnEl.addEventListener('click', cancelReport);
+            if (newReportBtnEl) newReportBtnEl.addEventListener('click', prepareNewReport);
+            if (openCameraBtnEl) openCameraBtnEl.addEventListener('click', () => fileInputEl.click());
+            if (fileInputEl) fileInputEl.addEventListener('change', handleFileSelect);
 
             // Tabla y Paginación
             document.querySelectorAll('.sortable').forEach(header => {
                 header.addEventListener('click', () => handleSort(header.getAttribute('data-column')));
             });
-            rowsPerPageSelectEl.addEventListener('change', (e) => {
+            if (rowsPerPageSelectEl) rowsPerPageSelectEl.addEventListener('change', (e) => {
                 currentRowsPerPage = parseInt(e.target.value);
                 currentPage = 1;
                 renderTable();
             });
-            firstPageBtnEl.addEventListener('click', () => paginate('first'));
-            prevPageBtnEl.addEventListener('click', () => paginate('prev'));
-            nextPageBtnEl.addEventListener('click', () => paginate('next'));
-            lastPageBtnEl.addEventListener('click', () => paginate('last'));
-            prevPageMobileBtnEl.addEventListener('click', () => paginate('prev'));
-            nextPageMobileBtnEl.addEventListener('click', () => paginate('next'));
+            if (firstPageBtnEl) firstPageBtnEl.addEventListener('click', () => paginate('first'));
+            if (prevPageBtnEl) prevPageBtnEl.addEventListener('click', () => paginate('prev'));
+            if (nextPageBtnEl) nextPageBtnEl.addEventListener('click', () => paginate('next'));
+            if (lastPageBtnEl) lastPageBtnEl.addEventListener('click', () => paginate('last'));
+            if (prevPageMobileBtnEl) prevPageMobileBtnEl.addEventListener('click', () => paginate('prev'));
+            if (nextPageMobileBtnEl) nextPageMobileBtnEl.addEventListener('click', () => paginate('next'));
 
             // Modal
-            closeModalBtnEl.addEventListener('click', closeModal);
-            markInProgressBtnEl.addEventListener('click', () => updateReportStatusOnModal('En proceso'));
-            markSolvedBtnEl.addEventListener('click', () => updateReportStatusOnModal('Solucionado'));
+            if (closeModalBtnEl) closeModalBtnEl.addEventListener('click', closeModal);
+            if (markInProgressBtnEl) markInProgressBtnEl.addEventListener('click', () => updateReportStatusOnModal('En proceso'));
+            if (markSolvedBtnEl) markSolvedBtnEl.addEventListener('click', () => updateReportStatusOnModal('Solucionado'));
 
             // Tema oscuro
-            themeToggleBtn.addEventListener('click', toggleDarkMode);
+            if (themeToggleBtn && themeIcon) { // Asegurarse que ambos existan
+                themeToggleBtn.addEventListener('click', toggleDarkMode);
+            }
+            console.log("Event Listeners configurados.");
         }
 
         // ----- LÓGICA DE PESTAÑAS -----
         function switchTab(tabName) {
+            // ... (código de switchTab que ya tienes y funciona) ...
             const isActiveManagement = tabName === 'management';
             managementTabEl.classList.toggle('border-blue-500', isActiveManagement);
             managementTabEl.classList.toggle('bg-blue-50', isActiveManagement);
@@ -902,169 +913,139 @@
 
         // ----- LÓGICA DE TEMA OSCURO -----
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode'); // Alterna la clase 'dark-mode' en el body
-
-            // Verificar si el themeIcon existe antes de intentar manipular sus clases
-            if (themeIcon) { // themeIcon es la variable global const themeIcon = document.getElementById('themeIcon');
+            document.body.classList.toggle('dark-mode');
+            if (themeIcon) {
                 if (document.body.classList.contains('dark-mode')) {
-                    // MODO OSCURO ACTIVADO
-                    themeIcon.classList.remove('fa-moon');      // Quitar icono de luna
-                    themeIcon.classList.add('fa-sun');        // Añadir icono de sol
-                    
-                    themeIcon.classList.remove('text-white');   // Quitar color blanco (si lo tenía)
-                    themeIcon.classList.add('text-yellow-400'); // Añadir color amarillo para el sol (o el que prefieras)
-                    
+                    themeIcon.classList.remove('fa-moon', 'text-white');
+                    themeIcon.classList.add('fa-sun', 'text-yellow-400');
                     localStorage.setItem('darkMode', 'enabled');
-                    console.log("Tema oscuro activado, icono: sol, color: amarillo");
                 } else {
-                    // MODO CLARO ACTIVADO
-                    themeIcon.classList.remove('fa-sun');         // Quitar icono de sol
-                    themeIcon.classList.add('fa-moon');       // Añadir icono de luna
-
-                    themeIcon.classList.remove('text-yellow-400'); // Quitar color amarillo (o el que hayas puesto)
-                    themeIcon.classList.add('text-white');      // Poner color blanco para la luna
-                    
+                    themeIcon.classList.remove('fa-sun', 'text-yellow-400');
+                    themeIcon.classList.add('fa-moon', 'text-white');
                     localStorage.setItem('darkMode', 'disabled');
-                    console.log("Tema claro activado, icono: luna, color: blanco");
                 }
-            } else {
-                console.warn("Elemento themeIcon no encontrado en el DOM.");
             }
         }
 
+        function applyInitialTheme() {
+            const savedMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDarkMode = savedMode === 'enabled' || (!savedMode && prefersDark);
+            if (themeIcon) { // Solo si themeIcon existe
+                if (isDarkMode) {
+                    document.body.classList.add('dark-mode');
+                    themeIcon.classList.remove('fa-moon', 'text-white');
+                    themeIcon.classList.add('fa-sun', 'text-yellow-400');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    themeIcon.classList.remove('fa-sun', 'text-yellow-400');
+                    themeIcon.classList.add('fa-moon', 'text-white');
+                }
+            }
+            console.log("Tema inicial aplicado:", isDarkMode ? "oscuro" : "claro");
+        }
+
+
         // ----- LÓGICA DE FIREBASE (LECTURA) -----
         function listenToReports() {
+            console.log("0. Entrando a listenToReports");
             const { collection, query, onSnapshot, orderBy } = window.firebaseFirestore;
-            const q = query(collection(window.db, "reclamos"), orderBy("fechaCreacion", "desc")); // Ordenar por defecto
-
+            if (!window.db || !collection || !query || !onSnapshot || !orderBy) {
+                console.error("ERROR CRÍTICO: Funciones de Firestore no disponibles en listenToReports.");
+                return;
+            }
+            const q = query(collection(window.db, "reclamos"), orderBy("fechaCreacion", "desc"));
             onSnapshot(q, (querySnapshot) => {
-        allReports = querySnapshot.docs.map(doc => {
-                const data = doc.data(); // Usar 'data' como lo tenías
-                return {
-                    id: doc.id,
-                    // titulo: data.titulo || '', // ELIMINADA o COMENTADA
-                    calle1: data.calle1 || '',      // AÑADIDA
-                    calle2: data.calle2 || '',      // AÑADIDA
-                    tipoIncidente: data.tipoIncidente || "Cartel Nomenclador", // Asegurar valor
-                    categoria: data.categoria || 'Otro', // CAMBIO: Usar campo 'categoria'
-                    descripcion: data.descripcion || '',
-                    fechaCreacion: data.fechaCreacion ? formatDate(data.fechaCreacion.toDate()) : 'Fecha no disponible',
-                    fechaUltimaModificacion: data.fechaUltimaModificacion ? formatDate(data.fechaUltimaModificacion.toDate()) : '-',
-                    estado: data.estado || 'Iniciado', // Asegurar valor por defecto
-                    latitud: data.latitud,
-                    longitud: data.longitud,
-                    imagenURL: data.imagenURL || null
-                };
-            });
-                console.log("Reportes cargados/actualizados desde Firebase:", allReports.length);
-                applyFilters(); // Aplicar filtros y renderizar todo
+                console.log("1. onSnapshot RECIBIÓ DATOS. Cantidad de docs:", querySnapshot.size);
+                if (querySnapshot.empty) {
+                    allReports = [];
+                } else {
+                   allReports = querySnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        calle1: data.calle1 || '',
+                        calle2: data.calle2 || '',
+                        tipoIncidente: data.tipoIncidente || "Cartel Nomenclador",
+                        categoria: data.categoria || 'Otro',
+                        descripcion: data.descripcion || '',
+                        fechaCreacion: data.fechaCreacion ? data.fechaCreacion.toDate() : null,
+                        fechaUltimaModificacion: data.fechaUltimaModificacion ? data.fechaUltimaModificacion.toDate() : null,
+                        estado: data.estado || 'Iniciado',
+                        latitud: data.latitud,
+                        longitud: data.longitud,
+                        imagenURL: data.imagenURL || null
+                    };
+                });
+                }
+                console.log("1.2. allReports actualizado. Cantidad:", allReports.length);
+                applyFilters();
                 updateStatistics();
+                if (userMap && userMapExistingReportMarkers) { // Llamar solo si están listos
+                    renderUserMapExistingReports(allReports);
+                } else {
+                    console.warn("listenToReports: userMap o userMapExistingReportMarkers NO listos para renderUserMapExistingReports.");
+                }
             }, (error) => {
-                console.error("Error al escuchar reportes de Firebase: ", error);
+                console.error("ERROR en onSnapshot:", error);
             });
         }
 
         // ----- LÓGICA DE FORMULARIO DE REPORTE -----
         async function handleReportSubmit(event) {
+            // ... (código de handleReportSubmit que ya tienes y funciona) ...
             event.preventDefault();
-            console.log("Formulario enviado. Procesando...");
+            if (!selectedLocation) { alert('Por favor, seleccione una ubicación en el mapa.'); return; }
+            if(submitReportBtnEl) submitReportBtnEl.disabled = true;
 
-            if (!selectedLocation) {
-                alert('Por favor, seleccione una ubicación en el mapa.');
-                return;
-            }
-
-            submitReportBtnEl.disabled = true;
-            // Aquí podrías añadir un spinner
-
-            const calle1 = document.getElementById('calle1').value.trim(); // Nuevo
-            const calle2 = document.getElementById('calle2').value.trim(); // Nuevo
+            const calle1 = document.getElementById('calle1').value.trim();
+            const calle2 = document.getElementById('calle2').value.trim();
             const categoria = categoriaFormularioSelectEl.value;
             const descripcion = reportDescriptionTextareaEl.value.trim();
             const latLng = selectedLocation.getLatLng();
             const file = fileInputEl.files[0];
             let imagenURL = null;
 
-            if (file) {
+            if (file && window.firebaseStorage && window.storage) { // Verificar que las funciones y storage existan
                 try {
                     const storageRef = window.firebaseStorage.ref(window.storage, `imagenes_reportes/${Date.now()}_${file.name}`);
                     await window.firebaseStorage.uploadBytes(storageRef, file);
                     imagenURL = await window.firebaseStorage.getDownloadURL(storageRef);
-                    console.log("Imagen subida:", imagenURL);
-                } catch (error) {
-                    console.error("Error al subir la imagen:", error);
-                    alert("Error al subir la imagen. El reporte se enviará sin ella.");
-                }
+                } catch (error) { console.error("Error al subir imagen:", error); alert("Error al subir imagen, reporte se enviará sin ella.");}
             }
 
-            const nuevoReporte = {
-                calle1: calle1,                            // NUEVO
-                calle2: calle2,                            // NUEVO (se guardará string vacío si no se ingresa)
-                tipoIncidente: "Cartel Nomenclador",
-                categoria: categoria,
-                descripcion: descripcion,
-                latitud: latLng.lat,
-                longitud: latLng.lng,
-                estado: "Iniciado",
+            const nuevoReporteData = {
+                calle1, calle2, tipoIncidente: "Cartel Nomenclador", categoria, descripcion,
+                latitud: latLng.lat, longitud: latLng.lng, estado: "Iniciado",
                 fechaCreacion: window.firebaseFirestore.serverTimestamp(),
                 fechaUltimaModificacion: window.firebaseFirestore.serverTimestamp(),
-                imagenURL: imagenURL
+                imagenURL
             };
-
-            console.log("Enviando a Firestore:", nuevoReporte);
-
             try {
                 const { collection, addDoc } = window.firebaseFirestore;
-                const docRef = await addDoc(collection(window.db, "reclamos"), nuevoReporte);
-                console.log("Reporte guardado con ID:", docRef.id);
-
+                const docRef = await addDoc(collection(window.db, "reclamos"), nuevoReporteData);
                 successMessageDivEl.classList.remove('hidden');
-                reportNumberSpanEl.textContent = docRef.id;
+                reportNumberSpanEl.textContent = docRef.id.substring(0,10)+"..."; // Acortar ID
                 reportFormContainerEl.classList.add('hidden');
                 incidentFormEl.reset();
-                previewImageEl.src = '#';
-                cameraPreviewDivEl.classList.add('hidden');
-                fileInputEl.value = null; // Limpiar el input file
-                if (selectedLocation) {
-                    userMap.removeLayer(selectedLocation);
-                    selectedLocation = null;
-                }
-            } catch (error) {
-                console.error("Error al guardar reporte en Firebase:", error);
-                alert('Error al enviar el reporte. Intente de nuevo.');
-            } finally {
-                submitReportBtnEl.disabled = false;
-                // Ocultar spinner
-            }
+                previewImageEl.src = '#'; cameraPreviewDivEl.classList.add('hidden'); fileInputEl.value = null;
+                if (selectedLocation) { userMap.removeLayer(selectedLocation); selectedLocation = null; }
+            } catch (error) { console.error("Error al guardar reporte:", error); alert('Error al enviar reporte.');
+            } finally { if(submitReportBtnEl) submitReportBtnEl.disabled = false; }
         }
-
-        function cancelReport() {
-            if (selectedLocation) {
-                userMap.removeLayer(selectedLocation);
-                selectedLocation = null;
-            }
-            reportFormContainerEl.classList.add('hidden');
-            incidentFormEl.reset();
-            previewImageEl.src = '#';
-            cameraPreviewDivEl.classList.add('hidden');
-            fileInputEl.value = null;
+        function cancelReport() { /* ... (código de cancelReport que ya tienes) ... */ 
+            if (selectedLocation) { userMap.removeLayer(selectedLocation); selectedLocation = null; }
+            reportFormContainerEl.classList.add('hidden'); incidentFormEl.reset();
+            previewImageEl.src = '#'; cameraPreviewDivEl.classList.add('hidden'); fileInputEl.value = null;
             successMessageDivEl.classList.add('hidden');
         }
-
-        function prepareNewReport() {
+        function prepareNewReport() { /* ... (código de prepareNewReport que ya tienes) ... */
             successMessageDivEl.classList.add('hidden');
-            // No mostramos el formulario aquí, se muestra al hacer clic en el mapa de usuario
-            if (selectedLocation) { // Limpiar marcador si existiera de un intento anterior
-                userMap.removeLayer(selectedLocation);
-                selectedLocation = null;
-            }
-             // Opcional: centrar el mapa de usuario si es necesario
-            // userMap.setView([latitudPuertoMadryn, longitudPuertoMadryn], 13);
+            if (selectedLocation) { userMap.removeLayer(selectedLocation); selectedLocation = null; }
             alert("Haga clic en el mapa para seleccionar la ubicación del nuevo reporte.");
         }
-
-        function handleFileSelect(event) {
-            if (event.target.files && event.target.files[0]) {
+        function handleFileSelect(event) { /* ... (código de handleFileSelect que ya tienes) ... */
+             if (event.target.files && event.target.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e_reader) {
                     previewImageEl.src = e_reader.target.result;
@@ -1076,98 +1057,64 @@
 
         // ----- LÓGICA DE FILTROS -----
         function applyFilters() {
+            // ... (código de applyFilters que ya tienes y funciona) ...
             console.log("Aplicando filtros. AllReports:", allReports.length);
-
             const categoria = filtroCategoriaSelectEl.value;
             const estado = filterStatusSelectEl.value;
-            const fecha = filterDateInputEl.value; // YYYY-MM-DD
-
+            const fecha = filterDateInputEl.value;
             currentDisplayedReports = allReports.filter(report => {
                 const CategoriaPasa = (categoria === 'Todos') || (report.categoria === categoria);
-                const EstadoPasa = (estado === 'Todos') || (report.estado === estado); // CAMBIO: "Todos" en lugar de "all"
-                
+                const EstadoPasa = (estado === 'Todos') || (report.estado === estado);
                 let FechaPasa = true;
-                if (fecha) {
-                    // report.fechaCreacion es DD/MM/YYYY, necesitamos convertirlo a YYYY-MM-DD para comparar
+                if (fecha && report.fechaCreacion !== 'Fecha no disponible') {
                     const [day, month, year] = report.fechaCreacion.split('/');
                     const reportDateYYYYMMDD = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                     FechaPasa = reportDateYYYYMMDD === fecha;
+                } else if (fecha && report.fechaCreacion === 'Fecha no disponible') {
+                    FechaPasa = false; // Si se filtra por fecha y el reporte no tiene, no pasa
                 }
                 return CategoriaPasa && EstadoPasa && FechaPasa;
             });
-
             console.log("Filtros aplicados. CurrentDisplayedReports:", currentDisplayedReports.length);
-            currentPage = 1; // Resetear a la primera página
-            renderTable();
-            renderMapMarkers(); // CAMBIO: nombre de la función del mapa
+            currentPage = 1; renderTable(); renderMapMarkers();
         }
-
-        function resetFilters() {
-            filtroCategoriaSelectEl.value = 'Todos';
-            filterStatusSelectEl.value = 'Todos'; // CAMBIO: "Todos" en lugar de "all"
-            filterDateInputEl.value = '';
-            applyFilters();
+        function resetFilters() { /* ... (código de resetFilters que ya tienes y funciona) ... */
+            filtroCategoriaSelectEl.value = 'Todos'; filterStatusSelectEl.value = 'Todos';
+            filterDateInputEl.value = ''; applyFilters();
         }
 
         // ----- LÓGICA DE LA TABLA Y PAGINACIÓN -----
         function renderTable() {
+            // ... (código de renderTable que ya tienes, asegurándote de que muestre calle1 y calle2) ...
             reportsTableBodyEl.innerHTML = '';
-
-            // Ordenar currentDisplayedReports
-            currentDisplayedReports.sort((a, b) => {
-                let valA = a[currentSortColumn];
-                let valB = b[currentSortColumn];
-
+            currentDisplayedReports.sort((a, b) => { /* ... tu lógica de sort ... */ 
+                let valA = a[currentSortColumn]; let valB = b[currentSortColumn];
                 if (currentSortColumn === 'fechaCreacion' || currentSortColumn === 'fechaUltimaModificacion') {
-                    valA = parseDate(valA); // Asume que parseDate maneja 'Fecha no disponible' etc.
-                    valB = parseDate(valB);
+                    valA = valA instanceof Date ? valA : new Date(0); // Asegurar que sea Date
+                    valB = valB instanceof Date ? valB : new Date(0);
                 }
-
                 if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
                 if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
                 return 0;
             });
-
             totalPages = Math.ceil(currentDisplayedReports.length / currentRowsPerPage);
-            if (totalPages === 0) totalPages = 1; // Evitar división por cero si no hay reportes
-            if (currentPage > totalPages) currentPage = totalPages; // Ajustar página actual si es necesario
-
+            if (totalPages === 0) totalPages = 1; if (currentPage > totalPages) currentPage = totalPages;
             const startIndex = (currentPage - 1) * currentRowsPerPage;
             const endIndex = Math.min(startIndex + currentRowsPerPage, currentDisplayedReports.length);
             const paginatedReports = currentDisplayedReports.slice(startIndex, endIndex);
-
             paginatedReports.forEach(report => {
-                const row = reportsTableBodyEl.insertRow();
-                row.setAttribute('data-report-id', report.id);
-                row.style.cursor = 'pointer';
-
+                const row = reportsTableBodyEl.insertRow(); row.setAttribute('data-report-id', report.id); row.style.cursor = 'pointer';
                 row.addEventListener('click', () => handleRowClick(report));
-
-                // Celda ID
-                const idCell = row.insertCell();
-                idCell.textContent = `#${report.id}`;
-                idCell.setAttribute('title', `#${report.id}`); // Tooltip por si se corta en móvil
-                // Celda Categoría
-                const categoriaCell = row.insertCell();
-                // CAMBIO: Mostrar la categoría directamente. El color se verá en el mapa.
-                categoriaCell.textContent = report.categoria || 'N/A';
-                // ANTES (para Título):
-                // row.insertCell().textContent = report.titulo || 'Sin título';
-                // AHORA (para Calles / Ubicación):
+                row.insertCell().textContent = `#${report.id}`;
+                row.insertCell().textContent = report.categoria || 'N/A';
                 const celdaUbicacion = row.insertCell();
                 let textoUbicacion = report.calle1 || 'Ubicación no especificada';
-                if (report.calle2) {
-                    textoUbicacion += (report.calle1 ? ` y ${report.calle2}` : report.calle2);
-                }
+                if (report.calle2) { textoUbicacion += (report.calle1 ? ` y ${report.calle2}` : report.calle2); }
                 celdaUbicacion.textContent = textoUbicacion;
-                // Celda Fecha Creación
-                row.insertCell().textContent = report.fechaCreacion;
-                // Celda Estado
+                row.insertCell().textContent = report.fechaCreacion ? formatDate(report.fechaCreacion) : 'Fecha no disponible';
                 const estadoCell = row.insertCell();
                 estadoCell.innerHTML = `<span class="status-badge ${getStatusClass(report.estado)}">${report.estado}</span>`;
-                // Celda Últ. Modif.
-                row.insertCell().textContent = report.fechaUltimaModificacion;
-                // Celda Acciones
+                row.insertCell().textContent = report.fechaUltimaModificacion ? formatDate(report.fechaUltimaModificacion) : '-';
                 const actionsCell = row.insertCell();
                 actionsCell.innerHTML = `
                     <button onclick="event.stopPropagation(); openReportModal('${report.id}')" class="text-blue-600 hover:text-blue-900 mr-2" title="Ver Detalles"><i class="fas fa-eye"></i></button>
@@ -1176,82 +1123,51 @@
             });
             updatePaginationControls();
         }
-
-        function handleSort(column) {
-            if (currentSortColumn === column) {
-                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSortColumn = column;
-                currentSortDirection = 'asc';
-            }
-            // Actualizar indicadores visuales de ordenamiento (opcional)
+        function handleSort(column) { /* ... (código de handleSort que ya tienes) ... */
+            if (currentSortColumn === column) { currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else { currentSortColumn = column; currentSortDirection = 'asc'; }
             document.querySelectorAll('.sortable i').forEach(icon => icon.className = 'fas fa-sort ml-1');
             const activeHeaderIcon = document.querySelector(`.sortable[data-column="${column}"] i`);
-            if (activeHeaderIcon) {
-                activeHeaderIcon.className = `fas fa-sort-${currentSortDirection === 'asc' ? 'up' : 'down'} ml-1`;
-            }
+            if (activeHeaderIcon) activeHeaderIcon.className = `fas fa-sort-${currentSortDirection === 'asc' ? 'up' : 'down'} ml-1`;
             renderTable();
-        }
-
-        function paginate(action) {
+         }
+        function paginate(action) { /* ... (código de paginate que ya tienes) ... */
             switch (action) {
-                case 'first': currentPage = 1; break;
-                case 'prev': if (currentPage > 1) currentPage--; break;
-                case 'next': if (currentPage < totalPages) currentPage++; break;
-                case 'last': currentPage = totalPages; break;
-                case Number.isInteger(action): currentPage = action; break; // Para click en número de página
-            }
-            renderTable();
+                case 'first': currentPage = 1; break; case 'prev': if (currentPage > 1) currentPage--; break;
+                case 'next': if (currentPage < totalPages) currentPage++; break; case 'last': currentPage = totalPages; break;
+                case Number.isInteger(action): currentPage = action; break;
+            } renderTable();
         }
-
-        function updatePaginationControls() {
+        function updatePaginationControls() { /* ... (código de updatePaginationControls que ya tienes) ... */
             const startIndex = (currentPage - 1) * currentRowsPerPage;
             const endIndex = Math.min(startIndex + currentRowsPerPage, currentDisplayedReports.length);
-
             paginationInfoEl.innerHTML = `Mostrando ${currentDisplayedReports.length > 0 ? startIndex + 1 : 0} a ${endIndex} de ${currentDisplayedReports.length} resultados`;
-
-            firstPageBtnEl.disabled = currentPage === 1;
-            prevPageBtnEl.disabled = currentPage === 1;
-            nextPageBtnEl.disabled = currentPage === totalPages || totalPages <= 1;
-            lastPageBtnEl.disabled = currentPage === totalPages || totalPages <= 1;
-            prevPageMobileBtnEl.disabled = currentPage === 1;
-            nextPageMobileBtnEl.disabled = currentPage === totalPages || totalPages <= 1;
-
-            pageNumbersDivEl.innerHTML = '';
-            const maxPagesToShow = 5;
+            firstPageBtnEl.disabled = currentPage === 1; prevPageBtnEl.disabled = currentPage === 1;
+            nextPageBtnEl.disabled = currentPage === totalPages || totalPages <= 1; lastPageBtnEl.disabled = currentPage === totalPages || totalPages <= 1;
+            prevPageMobileBtnEl.disabled = currentPage === 1; nextPageMobileBtnEl.disabled = currentPage === totalPages || totalPages <= 1;
+            pageNumbersDivEl.innerHTML = ''; const maxPagesToShow = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
             let endPageNum = Math.min(totalPages, startPage + maxPagesToShow - 1);
-            if (endPageNum - startPage + 1 < maxPagesToShow && totalPages >= maxPagesToShow) {
-                startPage = Math.max(1, endPageNum - maxPagesToShow + 1);
-            }
+            if (endPageNum - startPage + 1 < maxPagesToShow && totalPages >= maxPagesToShow) { startPage = Math.max(1, endPageNum - maxPagesToShow + 1); }
             for (let i = startPage; i <= endPageNum; i++) {
-                if (i > 0) { // Solo añadir si es mayor a 0
+                if (i > 0) {
                     const pageBtn = document.createElement('button');
                     pageBtn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium ${i === currentPage ? 'bg-blue-50 border-blue-500 text-blue-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`;
-                    pageBtn.textContent = i;
-                    pageBtn.onclick = () => paginate(i);
-                    pageNumbersDivEl.appendChild(pageBtn);
+                    pageBtn.textContent = i; pageBtn.onclick = () => paginate(i); pageNumbersDivEl.appendChild(pageBtn);
                 }
             }
         }
-
-        function handleRowClick(report) {
-            // Resaltar fila (opcional, ya que el modal es el foco principal)
+        function handleRowClick(report) { /* ... (código de handleRowClick que ya tienes) ... */
             document.querySelectorAll('#reportsTableBody tr').forEach(tr => tr.classList.remove('bg-blue-200'));
             const rowEl = document.querySelector(`#reportsTableBody tr[data-report-id="${report.id}"]`);
             if (rowEl) rowEl.classList.add('bg-blue-200');
-
-            // Centrar mapa y abrir popup
             if (report.latitud && report.longitud && managementMap) {
-                managementMap.flyTo([report.latitud, report.longitud], 17); // Zoom más cercano
+                managementMap.flyTo([report.latitud, report.longitud], 17);
                 if (managementMapMarkers) {
                     managementMapMarkers.eachLayer(marker => {
                         if (marker.reportData && marker.reportData.id === report.id) {
-                            // Leaflet.markercluster maneja la apertura del cluster si es necesario
-                            if (managementMapMarkers.hasLayer(marker)) { // Asegurarse que el marcador está en el cluster
-                                 managementMapMarkers.zoomToShowLayer(marker, () => {
-                                    marker.openPopup();
-                                });
+                            if (managementMapMarkers.hasLayer(marker)) {
+                                 managementMapMarkers.zoomToShowLayer(marker, () => { marker.openPopup(); });
                             }
                         }
                     });
@@ -1259,133 +1175,56 @@
             }
         }
 
-
         // ----- LÓGICA DEL MAPA -----
-        function initManagementMap() {
+        function initManagementMap() { /* ... (código de initManagementMap que ya tienes) ... */
             const puertoMadrynCoords = [-42.7692, -65.0392];
             managementMap = L.map('map').setView(puertoMadrynCoords, 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(managementMap);
-
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(managementMap);
             managementMapMarkers = L.markerClusterGroup({
-                iconCreateFunction: function(cluster) {
-                    const count = cluster.getChildCount();
-                    let c = ' marker-cluster-';
-                    if (count < 10) c += 'custom-small';
-                    else if (count < 100) c += 'custom-medium';
-                    else c += 'custom-large';
-                    return L.divIcon({
-                        html: `<div><span>${count}</span></div>`,
-                        className: 'marker-cluster' + c,
-                        iconSize: new L.Point(40, 40)
-                    });
+                iconCreateFunction: function(cluster) { /* ... tu iconCreateFunction ... */ 
+                    const count = cluster.getChildCount(); let c = ' marker-cluster-';
+                    if (count < 10) c += 'custom-small'; else if (count < 100) c += 'custom-medium'; else c += 'custom-large';
+                    return L.divIcon({ html: `<div><span>${count}</span></div>`, className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
                 }
             });
-            managementMap.addLayer(managementMapMarkers);
-            addLegendToMap(); // Añadir la leyenda flotante
+            managementMap.addLayer(managementMapMarkers); addLegendToMap();
         }
-
-        function addLegendToMap() {
+        function addLegendToMap() { /* ... (código de addLegendToMap que ya tienes) ... */
             const legend = L.control({position: 'topright'});
             legend.onAdd = function (map) {
-                const div = L.DomUtil.create('div', 'info legend-control'); // Usar la clase CSS nueva
-                let content = '<h4>Categorías</h4><ul>';
-                for (const categoria in CATEGORY_COLORS) {
-                    if (categoria !== 'default') { // No mostrar el color por defecto en la leyenda
-                        content += `<li><i style="background:${CATEGORY_COLORS[categoria]}"></i> ${categoria}</li>`;
-                    }
-                }
-                content += '</ul>';
-                div.innerHTML = content;
-                L.DomEvent.disableClickPropagation(div); // Evitar que clics en leyenda afecten el mapa
-                return div;
-            };
-            legend.addTo(managementMap);
+                const div = L.DomUtil.create('div', 'info legend-control'); let content = '<h4>Categorías</h4><ul>';
+                for (const categoria in CATEGORY_COLORS) { if (categoria !== 'default') { content += `<li><i style="background:${CATEGORY_COLORS[categoria]}"></i> ${categoria}</li>`; } }
+                content += '</ul>'; div.innerHTML = content; L.DomEvent.disableClickPropagation(div); return div;
+            }; legend.addTo(managementMap);
         }
-
-        function renderMapMarkers() {
-            if (!managementMapMarkers) return;
-            managementMapMarkers.clearLayers();
-
+        function renderMapMarkers() { /* ... (código de renderMapMarkers que ya tienes, incluyendo el marker.on('click') con la lógica de paginación) ... */
+            if (!managementMapMarkers) return; managementMapMarkers.clearLayers();
             currentDisplayedReports.forEach(report => {
                 if (report.latitud && report.longitud) {
                     const color = CATEGORY_COLORS[report.categoria] || CATEGORY_COLORS['default'];
-                    const markerIcon = L.divIcon({
-                        className: 'custom-map-marker', // No debe tener background fijo en CSS
-                        html: `<div style="background-color:${color}; width: 20px; height: 20px;"></div>`,
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    });
-
+                    const markerIcon = L.divIcon({ className: 'custom-map-marker', html: `<div style="background-color:${color}; width: 20px; height: 20px;"></div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
                     const marker = L.marker([report.latitud, report.longitud], { icon: markerIcon });
-                    marker.reportData = report; // Adjuntar datos para el popup y clics
-                    marker.bindPopup(`<b>${report.titulo || report.categoria}</b><br>Estado: ${report.estado}`);
-                    marker.on('click', (e) => {
-                        const clickedReport = e.target.reportData; // Obtenemos el reporte asociado al marcador
-                        
-                        console.log(`Marcador clickeado. Reporte ID: ${clickedReport.id}`);
-                        openReportModal(clickedReport.id); // Abrir el modal siempre
-
-                        // Intentar resaltar la fila y cambiar de página si es necesario
+                    marker.reportData = report; marker.bindPopup(`<b>${report.calle1 || report.categoria}</b><br>Estado: ${report.estado}`); // CAMBIO: Usar calle1 en popup
+                    marker.on('click', (e) => { /* ... tu lógica completa de clic en marcador de gestión ... */
+                        const clickedReport = e.target.reportData; openReportModal(clickedReport.id);
                         let targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
-
-                        // Primero, quitar resaltado de cualquier otra fila
-                        document.querySelectorAll('#reportsTableBody tr').forEach(tr => {
-                            tr.classList.remove('bg-blue-200'); // O la clase de resaltado que uses
-                        });
-
-                        if (targetRow) {
-                            // El reporte está en la página actual de la tabla
-                            console.log(`Fila para ${clickedReport.id} encontrada en la página actual.`);
-                            targetRow.classList.add('bg-blue-200');
-                            targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        document.querySelectorAll('#reportsTableBody tr').forEach(tr => tr.classList.remove('bg-blue-200'));
+                        if (targetRow) { targetRow.classList.add('bg-blue-200'); targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         } else {
-                            // El reporte NO está en la página actual, buscar en 'currentDisplayedReports'
-                            console.log(`Fila para ${clickedReport.id} NO encontrada en pág. actual. Buscando en todos los reportes filtrados...`);
                             const reportIndexInDisplayed = currentDisplayedReports.findIndex(r => r.id === clickedReport.id);
-
                             if (reportIndexInDisplayed !== -1) {
-                                // Calcular la página a la que pertenece
                                 const targetPage = Math.ceil((reportIndexInDisplayed + 1) / currentRowsPerPage);
-                                console.log(`Reporte ${clickedReport.id} está en el índice ${reportIndexInDisplayed} de currentDisplayedReports, pertenece a la pág. ${targetPage}. Página actual: ${currentPage}, Total Págs: ${totalPages}`);
-
                                 if (targetPage !== currentPage && targetPage > 0 && targetPage <= totalPages) {
-                                    console.log(`Cambiando a pág. ${targetPage} para mostrar reporte ${clickedReport.id}`);
-                                    currentPage = targetPage;
-                                    renderTable(); // Esto re-renderiza la tabla con la nueva página
-
-                                    // Después de re-renderizar, la fila debería existir. Intentar resaltar y hacer scroll.
-                                    setTimeout(() => {
+                                    currentPage = targetPage; renderTable();
+                                    setTimeout(() => { /* ... resaltar y scroll ... */ 
                                         targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
-                                        if (targetRow) {
-                                            console.log(`Fila para ${clickedReport.id} encontrada después de cambiar a pág. ${targetPage}.`);
-                                            targetRow.classList.add('bg-blue-200');
-                                            targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                                        } else {
-                                            console.warn(`Fila para ${clickedReport.id} aún no encontrada después de cambiar a pág. ${targetPage}. Esto podría ser un error si el reporte existe.`);
-                                        }
-                                    }, 150); // Pequeño delay para que el DOM se actualice
-                                } else if (targetPage === currentPage) {
-                                    // Esto es un caso raro: el cálculo dice que está en la página actual,
-                                    // pero no se encontró la fila inicialmente. Puede pasar si renderTable no se completó.
-                                    // Forzar un re-render y re-intentar puede ayudar.
-                                    console.warn(`Reporte ${clickedReport.id} debería estar en pág. actual ${currentPage} pero la fila no se encontró. Re-renderizando tabla.`);
-                                    renderTable();
-                                    setTimeout(() => {
-                                        targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
-                                        if (targetRow) {
-                                            targetRow.classList.add('bg-blue-200');
-                                            targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                                        }
+                                        if (targetRow) { targetRow.classList.add('bg-blue-200'); targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
                                     }, 150);
-                                } else {
-                                     console.log(`Página destino ${targetPage} es la actual o inválida. No se cambia de página para ${clickedReport.id}.`);
-                                     // Si targetPage === currentPage y no se encontró, ya se intentó arriba.
-                                     // Si es inválida, no hacer nada.
+                                } else if (targetPage === currentPage) { renderTable(); setTimeout(() => { /* ... resaltar y scroll ... */ 
+                                        targetRow = document.querySelector(`#reportsTableBody tr[data-report-id="${clickedReport.id}"]`);
+                                        if (targetRow) { targetRow.classList.add('bg-blue-200'); targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+                                    }, 150);
                                 }
-                            } else {
-                                console.error(`Reporte ${clickedReport.id} (del marcador) NO encontrado en currentDisplayedReports. No se puede cambiar de página ni resaltar.`);
                             }
                         }
                     });
@@ -1394,361 +1233,236 @@
             });
         }
 
-        function initUserMap() {
-            console.log("Inicializando userMap (solo base)..."); // Log indicando que es la inicialización base
-            const puertoMadrynCoords = [-42.7692, -65.0392];
-            
-            if (!userMap) { 
-                userMap = L.map('userMap', {
-                    // Si tenías opciones como zoomControl: false, etc., irían aquí, dentro de L.map('userMap', { AQUÍ })
-                }).setView(puertoMadrynCoords, 13);
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(userMap);
-                console.log("userMap base creado.");
-            } else {
-                console.log("userMap ya existía, solo se asegura la vista y el zoom.");
-                userMap.setView(puertoMadrynCoords, 13); // Asegurar el centro y zoom
-            }
-            // AQUÍ TERMINA LA FUNCIÓN. NADA MÁS DEBE IR DESPUÉS DE ESTE COMENTARIO DENTRO DE ESTA FUNCIÓN.
-        } // <--- ESTA ES LA LLAVE DE CIERRE DE initUserMap()
-
-        // ***** INICIO DEL BLOQUE B - NUEVAS FUNCIONES *****
-        function actualizarMarcadorYFormulario(latLng) {
-            // Asegurarse que las variables globales de los elementos del DOM estén disponibles
-            // Si no las tienes cacheadas globalmente, obténlas aquí:
-            // const reportFormContainerEl = document.getElementById('reportFormContainer');
-            // const successMessageDivEl = document.getElementById('successMessage');
-
-            if (!userMap || !latLng || typeof latLng.lat === 'undefined' || typeof latLng.lng === 'undefined') {
-                console.error("actualizarMarcadorYFormulario: userMap o latLng no válidos.", userMap, latLng);
-                return;
-            }
-
-            if (selectedLocation) {
-                userMap.removeLayer(selectedLocation);
-            }
+        // ***** PEGA ESTA FUNCIÓN COMPLETA EN TU SCRIPT ***** (YA ESTÁ PEGADA)
+        function renderUserMapExistingReports(reportsToDisplay) {
+            // ... (código que ya tienes y está bien, con logs y try-catch) ...
+            console.log("--- EJECUTANDO renderUserMapExistingReports ---");
+            if (!userMapExistingReportMarkers || !userMap) { console.warn("userMapExistingReportMarkers o userMap no están listos."); return; }
+            if (typeof CATEGORY_COLORS === 'undefined') { console.error("CATEGORY_COLORS no está definida."); return; }
+            userMapExistingReportMarkers.clearLayers();
+            console.log("Renderizando en userMap. Cantidad recibida:", reportsToDisplay ? reportsToDisplay.length : 0);
+            if (!reportsToDisplay || reportsToDisplay.length === 0) { console.log("No hay reportes para mostrar en userMap."); return; }
             try {
-                selectedLocation = L.marker(latLng).addTo(userMap);
-                console.log("Marcador (re)colocado en:", latLng.lat, latLng.lng);
-            } catch (error) {
-                console.error("Error al crear L.marker en actualizarMarcadorYFormulario:", error, "latLng era:", latLng);
-                alert("Error al colocar el marcador en el mapa.");
-                return;
-            }
-
-
-            // Mostrar el formulario (asegúrate que reportFormContainerEl y successMessageDivEl estén definidos globalmente o pásalos como parámetros)
-            if (reportFormContainerEl) reportFormContainerEl.classList.remove('hidden');
-            if (successMessageDivEl) successMessageDivEl.classList.add('hidden');
-
-            if (window.innerWidth < 768 && reportFormContainerEl) {
-                reportFormContainerEl.scrollIntoView({ behavior: 'smooth' });
-            }
+                reportsToDisplay.forEach(report => {
+                    if (report && report.latitud != null && report.longitud != null && !isNaN(parseFloat(report.latitud)) && !isNaN(parseFloat(report.longitud))) {
+                        const color = CATEGORY_COLORS[report.categoria] || CATEGORY_COLORS['default'];
+                        const existingReportIcon = L.divIcon({ className: 'custom-map-marker', html: `<div style="background-color:${color}; width: 16px; height: 16px; opacity: 0.75; box-shadow: 0 0 2px rgba(0,0,0,0.5);"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+                        const marker = L.marker([parseFloat(report.latitud), parseFloat(report.longitud)], { icon: existingReportIcon, opacity: 0.8 });
+                        let popupContent = `<b>Categoría:</b> ${report.categoria || 'N/A'}<br>`;
+                        if (report.calle1) { popupContent += `<b>Ubicación:</b> ${report.calle1}`; if (report.calle2) popupContent += ` y ${report.calle2}`; popupContent += '<br>'; }
+                        popupContent += `<small>Estado: ${report.estado || 'N/A'}</small>`; marker.bindPopup(popupContent);
+                        marker.on('click', () => { if (report.id) { openReportModal(report.id); } else { console.warn("Intento de abrir modal para reporte sin ID en userMap", report); } });
+                        userMapExistingReportMarkers.addLayer(marker);
+                    }
+                });
+                console.log("Fin del bucle forEach en renderUserMapExistingReports. Marcadores añadidos.");
+            } catch (error) { console.error("ERROR DENTRO DEL BUCLE o lógica de renderUserMapExistingReports:", error); }
+            console.log("--- FIN EJECUCIÓN renderUserMapExistingReports ---");
         }
 
-function obtenerUbicacionGPSParaUserMap() {
-    if (navigator.geolocation) {
-        console.log("Intentando obtener ubicación GPS para userMap...");
-        // Aquí podrías mostrar un indicador de carga en la UI
+        function initUserMap() {
+            // ... (código de initUserMap simplificado que ya tienes y está bien) ...
+            console.log("Inicializando userMap (solo base)..."); 
+            const puertoMadrynCoords = [-42.7692, -65.0392];
+            if (!userMap) { 
+                userMap = L.map('userMap', {}).setView(puertoMadrynCoords, 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(userMap);
+                console.log("userMap base creado.");
+            } else { userMap.setView(puertoMadrynCoords, 13); }
+            if (!userMapExistingReportMarkers) { 
+                userMapExistingReportMarkers = L.layerGroup().addTo(userMap);
+            } else { userMapExistingReportMarkers.clearLayers(); if (!userMap.hasLayer(userMapExistingReportMarkers)) { userMap.addLayer(userMapExistingReportMarkers);}}
+        }
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => { // Éxito
-                console.log("Ubicación GPS obtenida:", position.coords);
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                const nuevaPosicion = L.latLng(userLat, userLng); // Crear objeto L.latLng
-
-                if (userMap) {
-                    userMap.flyTo(nuevaPosicion, 17); // Centrar mapa y hacer zoom
-                    actualizarMarcadorYFormulario(nuevaPosicion); // Reutilizar la función
-                }
-                // Ocultar indicador de carga
-            },
-            (error) => { // Error
-                console.warn("Error al obtener ubicación GPS:", error.message, "Código:", error.code);
-                let alertMessage = "No se pudo obtener tu ubicación GPS. ";
-                if (error.code === 1) { // PERMISSION_DENIED
-                    alertMessage += "Has denegado el permiso de ubicación.";
-                } else if (error.code === 2) { // POSITION_UNAVAILABLE
-                    alertMessage += "La ubicación no está disponible actualmente.";
-                } else if (error.code === 3) { // TIMEOUT
-                    alertMessage += "Se agotó el tiempo esperando la ubicación.";
-                }
-                alertMessage += " Por favor, selecciona la ubicación manualmente en el mapa.";
-                alert(alertMessage);
-                // Ocultar indicador de carga
-            },
-            { // Opciones de geolocalización
-                enableHighAccuracy: true,
-                timeout: 10000,           // 10 segundos
-                maximumAge: 0             // No usar ubicación cacheada
-            }
-        );
-    } else {
-        console.warn("Geolocalización no soportada por este navegador.");
-        alert("Geolocalización no soportada. Por favor, selecciona la ubicación manually en el mapa.");
-    }
-}
-// ***** FIN DEL BLOQUE B - NUEVAS FUNCIONES *****
-
-// ----- FUNCIONES PARA MANEJAR UBICACIÓN EN USERMAP -----
-
-function actualizarMarcadorYFormulario(latLng) {
-    // Asegurarse que las variables globales de los elementos del DOM estén disponibles
-    // Si no las tienes cacheadas globalmente, obténlas aquí:
-    // const reportFormContainerEl = document.getElementById('reportFormContainer');
-    // const successMessageDivEl = document.getElementById('successMessage');
-
-    if (!userMap || !latLng || typeof latLng.lat === 'undefined' || typeof latLng.lng === 'undefined') {
-        console.error("actualizarMarcadorYFormulario: userMap o latLng no válidos.", userMap, latLng);
-        return;
-    }
-
-    if (selectedLocation) {
-        userMap.removeLayer(selectedLocation);
-    }
-    try {
-        selectedLocation = L.marker(latLng).addTo(userMap);
-        console.log("Marcador (re)colocado en:", latLng.lat, latLng.lng);
-    } catch (error) {
-        console.error("Error al crear L.marker en actualizarMarcadorYFormulario:", error, "latLng era:", latLng);
-        alert("Error al colocar el marcador en el mapa.");
-        return;
-    }
-    
-
-    // Mostrar el formulario (asegúrate que reportFormContainerEl y successMessageDivEl estén definidos)
-    if (reportFormContainerEl) reportFormContainerEl.classList.remove('hidden');
-    if (successMessageDivEl) successMessageDivEl.classList.add('hidden');
-    
-    if (window.innerWidth < 768 && reportFormContainerEl) {
-        reportFormContainerEl.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function obtenerUbicacionGPSParaUserMap() {
-    if (navigator.geolocation) {
-        console.log("Intentando obtener ubicación GPS para userMap...");
-        // Aquí podrías mostrar un indicador de carga en la UI
-
-        navigator.geolocation.getCurrentPosition(
-            (position) => { // Éxito
-                console.log("Ubicación GPS obtenida:", position.coords);
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                const nuevaPosicion = L.latLng(userLat, userLng); // Crear objeto L.latLng
-
-                if (userMap) {
-                    userMap.flyTo(nuevaPosicion, 17); // Centrar mapa y hacer zoom
-                    actualizarMarcadorYFormulario(nuevaPosicion); // Reutilizar la función
-                }
-                // Ocultar indicador de carga
-            },
-            (error) => { // Error
-                console.warn("Error al obtener ubicación GPS:", error.message, "Código:", error.code);
-                let alertMessage = "No se pudo obtener tu ubicación GPS. ";
-                if (error.code === 1) { // PERMISSION_DENIED
-                    alertMessage += "Has denegado el permiso de ubicación.";
-                } else if (error.code === 2) { // POSITION_UNAVAILABLE
-                    alertMessage += "La ubicación no está disponible actualmente.";
-                } else if (error.code === 3) { // TIMEOUT
-                    alertMessage += "Se agotó el tiempo esperando la ubicación.";
-                }
-                alertMessage += " Por favor, selecciona la ubicación manualmente en el mapa.";
-                alert(alertMessage);
-                // Ocultar indicador de carga
-            },
-            { // Opciones de geolocalización
-                enableHighAccuracy: true, 
-                timeout: 10000,           // 10 segundos
-                maximumAge: 0             // No usar ubicación cacheada
-            }
-        );
-    } else {
-        console.warn("Geolocalización no soportada por este navegador.");
-        alert("Geolocalización no soportada. Por favor, selecciona la ubicación manualmente en el mapa.");
-    }
-}
+        // ***** INICIO DEL BLOQUE B - NUEVAS FUNCIONES ***** (YA ESTÁN PEGADAS)
+        function actualizarMarcadorYFormulario(latLng) { /* ... (código que ya tienes) ... */ 
+             if (!userMap || !latLng || typeof latLng.lat === 'undefined' || typeof latLng.lng === 'undefined') { console.error("actualizarMarcadorYFormulario: userMap o latLng no válidos.", userMap, latLng); return; }
+            if (selectedLocation) { userMap.removeLayer(selectedLocation); }
+            try { selectedLocation = L.marker(latLng).addTo(userMap); } catch (error) { console.error("Error al crear L.marker:", error); alert("Error al colocar marcador."); return; }
+            if (reportFormContainerEl) reportFormContainerEl.classList.remove('hidden');
+            if (successMessageDivEl) successMessageDivEl.classList.add('hidden');
+            if (window.innerWidth < 768 && reportFormContainerEl) { reportFormContainerEl.scrollIntoView({ behavior: 'smooth' }); }
+        }
+        function obtenerUbicacionGPSParaUserMap() { /* ... (código que ya tienes) ... */
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition( (position) => {
+                    const nuevaPosicion = L.latLng(position.coords.latitude, position.coords.longitude);
+                    if (userMap) { userMap.flyTo(nuevaPosicion, 17); actualizarMarcadorYFormulario(nuevaPosicion); }
+                }, (error) => { /* ... manejo de error de GPS ... */ 
+                    console.warn("Error al obtener ubicación GPS:", error.message, "Código:", error.code);
+                    let alertMessage = "No se pudo obtener tu ubicación GPS. ";
+                    if (error.code === 1) alertMessage += "Has denegado el permiso."; else if (error.code === 2) alertMessage += "Ubicación no disponible."; else if (error.code === 3) alertMessage += "Timeout.";
+                    alert(alertMessage + " Selecciona manualmente.");
+                }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+            } else { alert("Geolocalización no soportada."); }
+        }
 
         // ----- LÓGICA DEL MODAL -----
         function openReportModal(reportId) {
             const report = allReports.find(r => r.id === reportId);
-            if (!report) {
-                console.error("Reporte no encontrado para modal:", reportId);
-                return;
+            if (!report) return;
+            currentReportIdForModal = reportId;
+
+            let modalHeaderText = `Reporte #${report.id}`;
+            if (report.calle1) {
+                modalHeaderText = `${report.calle1.substring(0, 25)}${report.calle1.length > 25 ? '...' : ''} - #${report.id}`;
+            } else if (report.categoria) {
+                modalHeaderText = `${report.categoria} - #${report.id}`;
             }
-            currentReportIdForModal = reportId; // Guardar ID para acciones del modal
-
-            modalTitleEl.textContent = `Detalles del Reporte #${report.id} - ${report.titulo || 'Sin Título'}`;            
-            // modalReportIdSpanEl.textContent = report.id; // El ID ya está en el título
-            modalCategoriaPEl.textContent = report.categoria || 'N/A';
-            modalStatusPEl.innerHTML = `<span class="status-badge ${getStatusClass(report.estado)}">${report.estado}</span>`;
-            modalDatePEl.textContent = report.fechaCreacion;
-            modalDateModifiedPEl.textContent = report.fechaUltimaModificacion;
-            modalLocationPEl.textContent = (report.latitud && report.longitud) ? `${report.latitud.toFixed(4)}, ${report.longitud.toFixed(4)}` : 'N/A';
-            modalDescriptionPEl.textContent = report.descripcion || 'Sin descripción.';
-
-            if (report.imagenURL) {
-                modalImageEl.src = report.imagenURL;
-                modalImageContainerEl.classList.remove('hidden');
-            } else {
-                modalImageContainerEl.classList.add('hidden');
-                modalImageEl.src = '';
-            }
-
-            markInProgressBtnEl.classList.toggle('hidden', report.estado === 'En proceso' || report.estado === 'Solucionado');
-            markSolvedBtnEl.classList.toggle('hidden', report.estado === 'Solucionado');
-
-            reportModalEl.classList.remove('hidden');
+            if (modalTitleEl) modalTitleEl.textContent = modalHeaderText;
+            if(modalCalle1PEl) modalCalle1PEl.textContent = report.calle1 || 'No especificada'; if(modalCalle2PEl) modalCalle2PEl.textContent = report.calle2 || 'N/A';
+            if(modalCategoriaPEl) modalCategoriaPEl.textContent = report.categoria || 'N/A';
+            if(modalStatusPEl) modalStatusPEl.innerHTML = `<span class="status-badge ${getStatusClass(report.estado)}">${report.estado || 'N/A'}</span>`;
+            if(modalDatePEl) modalDatePEl.textContent = report.fechaCreacion || 'N/A'; if(modalDateModifiedPEl) modalDateModifiedPEl.textContent = report.fechaUltimaModificacion || 'N/A';
+            if(modalLocationPEl) modalLocationPEl.textContent = (report.latitud != null && report.longitud != null) ? `${Number(report.latitud).toFixed(4)}, ${Number(report.longitud).toFixed(4)}` : 'N/A';
+            if(modalDescriptionPEl) modalDescriptionPEl.textContent = report.descripcion || 'Sin descripción.';
+            if (report.imagenURL && modalImageEl && modalImageContainerEl) { modalImageEl.src = report.imagenURL; modalImageContainerEl.classList.remove('hidden');
+            } else if (modalImageContainerEl && modalImageEl) { modalImageContainerEl.classList.add('hidden'); modalImageEl.src = ''; }
+            if(markInProgressBtnEl) markInProgressBtnEl.classList.toggle('hidden', report.estado === 'En proceso' || report.estado === 'Solucionado');
+            if(markSolvedBtnEl) markSolvedBtnEl.classList.toggle('hidden', report.estado === 'Solucionado');
+            if(reportModalEl) reportModalEl.classList.remove('hidden');
         }
-
-        function closeModal() {
-            reportModalEl.classList.add('hidden');
-            currentReportIdForModal = null; // Limpiar ID
+        function closeModal() { /* ... (código de closeModal que ya tienes) ... */
+            if (reportModalEl) { reportModalEl.classList.add('hidden');} currentReportIdForModal = null;
         }
-
-        async function updateReportStatusOnModal(newStatus) {
-            if (currentReportIdForModal) {
-                await updateReportStatus(currentReportIdForModal, newStatus);
-            }
-            closeModal(); // Cerrar modal después de intentar actualizar
+        async function updateReportStatusOnModal(newStatus) { /* ... (código que ya tienes) ... */
+            if (currentReportIdForModal) { await updateReportStatus(currentReportIdForModal, newStatus); } closeModal();
         }
-
-        async function updateReportStatus(reportId, newStatus) {
+        async function updateReportStatus(reportId, newStatus) { /* ... (código que ya tienes y funciona) ... */
             console.log(`Actualizando reporte ${reportId} a estado: ${newStatus}`);
-            const { doc, updateDoc, serverTimestamp } = window.firebaseFirestore;
-            const reportRef = doc(window.db, "reclamos", reportId);
-            try {
-                await updateDoc(reportRef, {
-                    estado: newStatus,
-                    fechaUltimaModificacion: serverTimestamp()
-                });
-                console.log("Reporte actualizado con éxito.");
-                // No es necesario llamar a closeModal() aquí si se llama desde updateReportStatusOnModal
-            } catch (error) {
-                console.error("Error al actualizar estado del reporte:", error);
-                alert("Error al actualizar el estado. Intente de nuevo.");
-            }
+            const { doc, updateDoc, serverTimestamp } = window.firebaseFirestore; const reportRef = doc(window.db, "reclamos", reportId);
+            try { await updateDoc(reportRef, { estado: newStatus, fechaUltimaModificacion: serverTimestamp() });
+            } catch (error) { console.error("Error al actualizar estado:", error); alert("Error al actualizar estado."); }
         }
 
         // ----- LÓGICA DE ESTADÍSTICAS -----
         function updateStatistics() {
             if (allReports.length === 0) {
-                todayReportsSpanEl.textContent = '0';
-                monthReportsSpanEl.textContent = '0';
+                todayReportsSpanEl.textContent = 0;
+                monthReportsSpanEl.textContent = 0;
                 solvedPercentageSpanEl.textContent = '0%';
-                // if (urgentReportsSpanEl) urgentReportsSpanEl.textContent = '0'; // Si se reactiva
+                urgentReportsSpanEl.textContent = '0%';
                 return;
             }
 
             const today = new Date();
-            const todayFormatted = formatDate(today);
-            const currentMonth = today.getMonth();
-            const currentYear = today.getFullYear();
-
             let todayCount = 0;
             let monthCount = 0;
             let solvedCount = 0;
             let totalDañados = 0;
             let urgentesNoSolucionados = 0;
 
-
             allReports.forEach(report => {
-                // Reportes de hoy
-                if (report.fechaCreacion === todayFormatted) {
-                    todayCount++;
-                }
-                // Reportes del mes
-                const reportDate = parseDate(report.fechaCreacion);
-                if (reportDate.getMonth() === currentMonth && reportDate.getFullYear() === currentYear) {
+                // Usamos isSameDay para comparar fechas como objetos Date
+                if (isSameDay(report.fechaCreacion, today)) todayCount++;
+
+                const reportDate = report.fechaCreacion || new Date(0); // Evitar null
+
+                if (
+                    reportDate.getMonth() === today.getMonth() &&
+                    reportDate.getFullYear() === today.getFullYear()
+                ) {
                     monthCount++;
                 }
-                // Resueltos
-                if (report.estado === 'Solucionado') {
-                    solvedCount++;
-                }
-                // Urgentes: categoría "Dañado" y no solucionados
+
+                if (report.estado === 'Solucionado') solvedCount++;
+
                 if (report.categoria === 'Dañado') {
                     totalDañados++;
-                    if (report.estado !== 'Solucionado') {
-                        urgentesNoSolucionados++;
-                    }
+                    if (report.estado !== 'Solucionado') urgentesNoSolucionados++;
                 }
-
             });
 
             todayReportsSpanEl.textContent = todayCount;
             monthReportsSpanEl.textContent = monthCount;
-            const percentageSolved = allReports.length > 0 ? Math.round((solvedCount / allReports.length) * 100) : 0;
+
+            const percentageSolved = allReports.length > 0
+                ? Math.round((solvedCount / allReports.length) * 100)
+                : 0;
+
             solvedPercentageSpanEl.textContent = `${percentageSolved}%`;
-            if (urgentReportsSpanEl) {
-                urgentReportsSpanEl.textContent = totalDañados > 0 ? `${Math.round((urgentesNoSolucionados / totalDañados) * 100)}%` : '0%';
-            }
 
-
-            console.log("Estadísticas actualizadas:", { todayCount, monthCount, percentageSolved });
+            urgentReportsSpanEl.textContent = totalDañados > 0
+                ? `${Math.round((urgentesNoSolucionados / totalDañados) * 100)}%`
+                : '0%';
         }
 
         // ----- FUNCIONES UTILITARIAS -----
-        function formatDate(date) { // Asume que 'date' es un objeto Date de JS
-            if (!(date instanceof Date) || isNaN(date.getTime())) return 'Fecha inválida';
+        function formatDate(date) {
+            if (!(date instanceof Date)) return 'Fecha no disponible';
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
             return `${day}/${month}/${year}`;
         }
-
-        function parseDate(dateString) { // Asume DD/MM/YYYY
-            if (!dateString || typeof dateString !== 'string') return new Date(NaN);
-            const parts = dateString.split('/');
-            if (parts.length === 3) {
-                const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1; // Meses en JS son 0-indexados
-                const year = parseInt(parts[2], 10);
-                if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-                    return new Date(year, month, day);
-                }
-            }
-            return new Date(NaN); // Fecha inválida
+        function parseDate(dateString) {
+            if (!dateString || dateString === 'Fecha no disponible') return new Date(0); // Fecha muy antigua
+            const [day, month, year] = dateString.split('/');
+            return new Date(year, month - 1, day);
         }
-
         function getStatusClass(status) {
-            const statusClasses = {
-                'Iniciado': 'bg-indigo-100 text-indigo-800',
-                'En proceso': 'bg-yellow-100 text-yellow-800',
-                'Solucionado': 'bg-green-100 text-green-800',
-                'Default': 'bg-gray-100 text-gray-800'
-            };
-            return statusClasses[status] || statusClasses['Default'];
+            switch (status) {
+                case 'Iniciado':
+                    return 'bg-blue-200 text-blue-900';
+                case 'En proceso':
+                    return 'bg-yellow-200 text-yellow-900';
+                case 'Solucionado':
+                    return 'bg-green-200 text-green-900';
+                default:
+                    return 'bg-gray-200 text-gray-900';
+            }
         }
+        function highlightTableRow(reportId) { /* ... */ }
 
-        function highlightTableRow(reportId) {
-            document.querySelectorAll('#reportsTableBody tr').forEach(tr => {
-                tr.classList.remove('bg-blue-200');
-                if (tr.getAttribute('data-report-id') === reportId) {
-                    tr.classList.add('bg-blue-200');
-                }
-            });
-        }
+        // ----- FUNCIÓN AUXILIAR PARA COMPARAR FECHAS -----
+        function isSameDay(date1, date2) {
+            return (
+                date1 &&
+                date2 &&
+                date1.getFullYear() === date2.getFullYear() &&
+                date1.getMonth() === date2.getMonth() &&
+                date1.getDate() === date2.getDate()
+            );
+}
 
     </script>
-
+    
     <!-- ================================================== -->
     <!-- ===== INICIO: REGISTRO DEL SERVICE WORKER ====== -->
     <!-- ================================================== -->
+    <!-- Service Worker Registration con autoactualización -->
     <script>
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => { // Esperar a que la página y todos los recursos carguen
-            navigator.serviceWorker.register('./service-worker.js') // Asegúrate que service-worker.js esté en la raíz
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
                 .then(registration => {
-                    console.log('Service Worker: Registrado exitosamente con el scope:', registration.scope);
+                    console.log('Service Worker registrado:', registration.scope);
+
+                    // Forzar actualización automática
+                    if (registration.waiting) {
+                        sendSkipWaitingMessage(registration.waiting);
+                    }
+
+                    registration.addEventListener('updatefound', () => {
+                        const installingWorker = registration.installing;
+                        if (installingWorker && installingWorker.state === 'installed') {
+                            sendSkipWaitingMessage(installingWorker);
+                        }
+                    });
+
+                    // Escuchar cambios de controlador para recargar página
+                    navigator.serviceWorker.addEventListener('controllerchange', () => {
+                        window.location.reload();
+                    });
                 })
                 .catch(error => {
-                    console.error('Service Worker: Fallo en el registro:', error);
+                    console.error('Error registrando Service Worker:', error);
                 });
         });
+    }
+
+    function sendSkipWaitingMessage(worker) {
+        worker.postMessage({ type: 'SKIP_WAITING' });
     }
     </script>
     <!-- ================================================ -->
