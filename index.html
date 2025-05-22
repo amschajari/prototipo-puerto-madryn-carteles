@@ -170,6 +170,119 @@
     .dark-mode .instructions-panel ol {
         color: #cbd5e0 !important;
     }
+    /* === INICIO: ESTILOS DARK MODE ADICIONALES Y CORRECCIONES === */
+
+    /* --- FORMULARIO DE REPORTE (Pestaña "Reporte de Incidentes") --- */
+    body.dark-mode #reportFormContainer label.text-gray-700 {
+        color: #d1d5db; 
+    }
+    body.dark-mode #reportFormContainer input[type="text"],
+    body.dark-mode #reportFormContainer select,
+    body.dark-mode #reportFormContainer textarea {
+        background-color: #374151; 
+        color: #f3f4f6;          
+        border-color: #4b5563;   
+    }
+    body.dark-mode #reportFormContainer input[type="text"]::placeholder,
+    body.dark-mode #reportFormContainer textarea::placeholder {
+        color: #9ca3af; 
+    }
+    body.dark-mode #reportFormContainer select option {
+        background-color: #374151;
+        color: #f3f4f6;
+    }
+    body.dark-mode #reportFormContainer .border-dashed.border-gray-300 {
+         border-color: #6b7280; 
+    }
+    body.dark-mode #reportFormContainer #openCameraBtn.bg-blue-100 {
+        background-color: #1e3a8a; 
+        color: #dbeafe;          
+    }
+    body.dark-mode #reportFormContainer #openCameraBtn.hover\:bg-blue-200:hover {
+        background-color: #1c3274; 
+    }
+    body.dark-mode #reportFormContainer #cancelReportBtn.text-gray-700 {
+        background-color: #4b5563; 
+        color: #d1d5db;          
+    }
+    body.dark-mode #reportFormContainer #cancelReportBtn.hover\:bg-gray-100:hover {
+        background-color: #6b7280; 
+    }
+    body.dark-mode #reportFormContainer #submitReportBtn.bg-blue-600 {
+        background-color: #2563eb; 
+    }
+    body.dark-mode #reportFormContainer #submitReportBtn.hover\:bg-blue-700:hover {
+        background-color: #1d4ed8; 
+    }
+
+    /* --- FILTROS Y ELEMENTOS DE TABLA (Pestaña "Gestión de Reportes") --- */
+    /* (Algunos de estos ya los tenías, asegúrate de no duplicar si son idénticos) */
+    body.dark-mode div > div > div.bg-gray-50 label.text-gray-700 { 
+         color: #d1d5db !important; 
+    }
+    body.dark-mode div > div > div.bg-gray-50 select,
+    body.dark-mode div > div > div.bg-gray-50 input[type="date"] {
+        background-color: #374151; 
+        color: #f3f4f6;
+        border-color: #4b5563; 
+    }
+    body.dark-mode div > div > div.bg-gray-50 select option {
+        background-color: #374151;
+        color: #f3f4f6;
+    }
+    body.dark-mode #resetFiltersBtn.bg-gray-200 {
+        background-color: #4b5563; 
+        color: #e5e7eb;          
+    }
+    body.dark-mode #resetFiltersBtn.hover\:bg-gray-300:hover {
+        background-color: #6b7280; 
+    }
+    body.dark-mode div.flex.items-center > span.text-sm.text-gray-600 {
+        color: #9ca3af; 
+    }
+    body.dark-mode #rowsPerPage.border.rounded {
+        background-color: #374151; 
+        color: #f3f4f6;
+        border-color: #4b5563; 
+    }
+    body.dark-mode #rowsPerPage option {
+        background-color: #374151;
+        color: #f3f4f6;
+    }
+
+    /* --- BOTÓN DE CAMBIO DE TEMA (Header) --- */
+    #themeToggle {
+        background-color: #e5e7eb; 
+        border-radius: 9999px;     
+        width: 40px;               
+        height: 40px;              
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    }
+    #themeToggle:hover {
+        background-color: #d1d5db; 
+    }
+    #themeToggle #themeIcon { 
+        color: #374151;      
+        transition: color 0.2s ease-in-out; 
+    }
+    body.dark-mode #themeToggle {
+        background-color: #374151; 
+    }
+    body.dark-mode #themeToggle:hover {
+        background-color: #4b5563; 
+    }
+    body.dark-mode #themeToggle #themeIcon.fa-sun {
+        color: #facc15; /* Amarillo para el sol */
+    }
+    body.dark-mode #themeToggle #themeIcon.fa-moon { /* Para el estado inicial si carga en oscuro */
+        color: #e5e7eb; /* Blanco/gris claro para la luna */
+    }
+    /* === FIN: ESTILOS DARK MODE ADICIONALES Y CORRECCIONES === */
+
 </style>
 </head>
 <body class="bg-gray-100">
@@ -191,8 +304,9 @@
                     <button id="managementTab" class="tab-button px-6 py-3 font-medium text-gray-700 border-b-2 border-blue-500 bg-blue-50">Gestión de Reportes</button>
                     <button id="userTab" class="tab-button px-6 py-3 font-medium text-gray-500 hover:text-gray-700">Reporte de Incidentes</button>
                 </div>
-                <button id="themeToggle" class="mr-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600">
-                    <i id="themeIcon" class="fas fa-moon"></i>
+                <!-- En tu <header> o donde esté el botón -->
+                <button id="themeToggle" title="Cambiar tema" class="p-0 focus:outline-none mr-2"> <!-- Clases de Tailwind para padding y fondo eliminadas, solo focus -->
+                    <i id="themeIcon" class="fas fa-moon text-xl"></i> <!-- Solo icono base y tamaño 'text-xl' -->
                 </button>
             </div>
 
@@ -292,8 +406,8 @@
                                     </th>
 
                                     <!-- Título: Sin cambios -->
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Título
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer sortable" data-column="calle1"> <!-- CAMBIADO -->
+                                        Calles / Ubicación <i class="fas fa-sort ml-1"></i> <!-- CAMBIADO -->
                                     </th>
 
                                     <!-- Fecha: Sin cambios -->
@@ -390,11 +504,24 @@
                         <div id="reportFormContainer" class="hidden bg-white p-4 rounded-lg shadow">
                             <h3 class="font-semibold text-lg mb-3">Detalles del reporte</h3>
                             <form id="incidentForm">
+                                <!-- ESTE ES EL BLOQUE QUE REEMPLAZAS (EL ANTIGUO CAMPO TÍTULO):
                                 <div class="mb-3">
-                                    <label for="reportTitle" class="block text-gray-700 mb-1">Título</label> <!-- CAMBIO: 'for' añadido -->
+                                    <label for="reportTitle" class="block text-gray-700 mb-1">Título</label>
                                     <input type="text" id="reportTitle" class="w-full p-2 border rounded" placeholder="Ej: Cartel dañado en Av. Roca" required>
                                 </div>
-                               <div class="mb-3">
+                                -->
+
+                                <!-- ***** INICIO: NUEVOS CAMPOS CALLE 1 Y CALLE 2 ***** -->
+                                <div class="mb-3">
+                                    <label for="calle1" class="block text-gray-700 mb-1">Calle Principal (Ej: Sarmiento 800-900)</label>
+                                    <input type="text" id="calle1" name="calle1" class="w-full p-2 border rounded" placeholder="Nombre de la calle y altura/tramo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="calle2" class="block text-gray-700 mb-1">Calle Secundaria / Intersección (Opcional)</label>
+                                    <input type="text" id="calle2" name="calle2" class="w-full p-2 border rounded" placeholder="Calle de cruce o referencia adicional">
+                                    <!-- Nota: 'calle2' no tiene 'required', es opcional -->
+                                </div>
+                                <!-- ***** FIN: NUEVOS CAMPOS CALLE 1 Y CALLE 2 ***** -->
                                     <!-- CAMBIO: ID y 'for' actualizados para el formulario de categoría -->
                                     <label for="categoriaFormulario" class="block text-gray-700 mb-1">Categoría</label>
                                     <select id="categoriaFormulario" name="categoriaReporteFormulario" class="w-full p-2 border rounded" required>
@@ -775,14 +902,33 @@
 
         // ----- LÓGICA DE TEMA OSCURO -----
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('darkMode', 'enabled');
+            document.body.classList.toggle('dark-mode'); // Alterna la clase 'dark-mode' en el body
+
+            // Verificar si el themeIcon existe antes de intentar manipular sus clases
+            if (themeIcon) { // themeIcon es la variable global const themeIcon = document.getElementById('themeIcon');
+                if (document.body.classList.contains('dark-mode')) {
+                    // MODO OSCURO ACTIVADO
+                    themeIcon.classList.remove('fa-moon');      // Quitar icono de luna
+                    themeIcon.classList.add('fa-sun');        // Añadir icono de sol
+                    
+                    themeIcon.classList.remove('text-white');   // Quitar color blanco (si lo tenía)
+                    themeIcon.classList.add('text-yellow-400'); // Añadir color amarillo para el sol (o el que prefieras)
+                    
+                    localStorage.setItem('darkMode', 'enabled');
+                    console.log("Tema oscuro activado, icono: sol, color: amarillo");
+                } else {
+                    // MODO CLARO ACTIVADO
+                    themeIcon.classList.remove('fa-sun');         // Quitar icono de sol
+                    themeIcon.classList.add('fa-moon');       // Añadir icono de luna
+
+                    themeIcon.classList.remove('text-yellow-400'); // Quitar color amarillo (o el que hayas puesto)
+                    themeIcon.classList.add('text-white');      // Poner color blanco para la luna
+                    
+                    localStorage.setItem('darkMode', 'disabled');
+                    console.log("Tema claro activado, icono: luna, color: blanco");
+                }
             } else {
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('darkMode', 'disabled');
+                console.warn("Elemento themeIcon no encontrado en el DOM.");
             }
         }
 
@@ -792,22 +938,24 @@
             const q = query(collection(window.db, "reclamos"), orderBy("fechaCreacion", "desc")); // Ordenar por defecto
 
             onSnapshot(q, (querySnapshot) => {
-                allReports = querySnapshot.docs.map(doc => {
-                    const data = doc.data();
-                    return {
-                        id: doc.id,
-                        titulo: data.titulo || '',
-                        tipoIncidente: data.tipoIncidente || "Cartel Nomenclador", // Asegurar valor
-                        categoria: data.categoria || 'Otro', // CAMBIO: Usar campo 'categoria'
-                        descripcion: data.descripcion || '',
-                        fechaCreacion: data.fechaCreacion ? formatDate(data.fechaCreacion.toDate()) : 'Fecha no disponible',
-                        fechaUltimaModificacion: data.fechaUltimaModificacion ? formatDate(data.fechaUltimaModificacion.toDate()) : '-',
-                        estado: data.estado || 'Iniciado', // Asegurar valor por defecto
-                        latitud: data.latitud,
-                        longitud: data.longitud,
-                        imagenURL: data.imagenURL || null
-                    };
-                });
+        allReports = querySnapshot.docs.map(doc => {
+                const data = doc.data(); // Usar 'data' como lo tenías
+                return {
+                    id: doc.id,
+                    // titulo: data.titulo || '', // ELIMINADA o COMENTADA
+                    calle1: data.calle1 || '',      // AÑADIDA
+                    calle2: data.calle2 || '',      // AÑADIDA
+                    tipoIncidente: data.tipoIncidente || "Cartel Nomenclador", // Asegurar valor
+                    categoria: data.categoria || 'Otro', // CAMBIO: Usar campo 'categoria'
+                    descripcion: data.descripcion || '',
+                    fechaCreacion: data.fechaCreacion ? formatDate(data.fechaCreacion.toDate()) : 'Fecha no disponible',
+                    fechaUltimaModificacion: data.fechaUltimaModificacion ? formatDate(data.fechaUltimaModificacion.toDate()) : '-',
+                    estado: data.estado || 'Iniciado', // Asegurar valor por defecto
+                    latitud: data.latitud,
+                    longitud: data.longitud,
+                    imagenURL: data.imagenURL || null
+                };
+            });
                 console.log("Reportes cargados/actualizados desde Firebase:", allReports.length);
                 applyFilters(); // Aplicar filtros y renderizar todo
                 updateStatistics();
@@ -829,7 +977,8 @@
             submitReportBtnEl.disabled = true;
             // Aquí podrías añadir un spinner
 
-            const titulo = reportTitleInputEl.value.trim();
+            const calle1 = document.getElementById('calle1').value.trim(); // Nuevo
+            const calle2 = document.getElementById('calle2').value.trim(); // Nuevo
             const categoria = categoriaFormularioSelectEl.value;
             const descripcion = reportDescriptionTextareaEl.value.trim();
             const latLng = selectedLocation.getLatLng();
@@ -849,7 +998,8 @@
             }
 
             const nuevoReporte = {
-                titulo: titulo,
+                calle1: calle1,                            // NUEVO
+                calle2: calle2,                            // NUEVO (se guardará string vacío si no se ingresa)
                 tipoIncidente: "Cartel Nomenclador",
                 categoria: categoria,
                 descripcion: descripcion,
@@ -1001,8 +1151,15 @@
                 const categoriaCell = row.insertCell();
                 // CAMBIO: Mostrar la categoría directamente. El color se verá en el mapa.
                 categoriaCell.textContent = report.categoria || 'N/A';
-                // Celda Título
-                row.insertCell().textContent = report.titulo || 'Sin título';
+                // ANTES (para Título):
+                // row.insertCell().textContent = report.titulo || 'Sin título';
+                // AHORA (para Calles / Ubicación):
+                const celdaUbicacion = row.insertCell();
+                let textoUbicacion = report.calle1 || 'Ubicación no especificada';
+                if (report.calle2) {
+                    textoUbicacion += (report.calle1 ? ` y ${report.calle2}` : report.calle2);
+                }
+                celdaUbicacion.textContent = textoUbicacion;
                 // Celda Fecha Creación
                 row.insertCell().textContent = report.fechaCreacion;
                 // Celda Estado
